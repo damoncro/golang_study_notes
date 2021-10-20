@@ -1977,20 +1977,188 @@ func (mwc myWriterCloser) Close() error {
 ** Summary
 
 #+attr_org: :width 600px
-[[file:~/OneDrive/Org/crypto.com/golang/golang/Interfaces/_20211020_120227screenshot.png]]
+[[file:golang/Interfaces/_20211020_120227screenshot.png]]
 
 #+attr_org: :width 600px
-[[file:~/OneDrive/Org/crypto.com/golang/golang/Interfaces/_20211020_120253screenshot.png]]
+[[file:golang/Interfaces/_20211020_120253screenshot.png]]
 
 #+attr_org: :width 600px
-[[file:~/OneDrive/Org/crypto.com/golang/golang/Interfaces/_20211020_120424screenshot.png]]
+[[file:golang/Interfaces/_20211020_120424screenshot.png]]
 
 
 #+attr_org: :width 600px
-[[file:~/OneDrive/Org/crypto.com/golang/golang/Interfaces/_20211020_120621screenshot.png]]
+[[file:golang/Interfaces/_20211020_120621screenshot.png]]
 
 #+attr_org: :width 600px
-[[file:~/OneDrive/Org/crypto.com/golang/golang/Interfaces/_20211020_122545screenshot.png]]
+[[file:golang/Interfaces/_20211020_122545screenshot.png]]
+
+* Goroutines
+
+#+attr_org: :width 600px
+[[file:golang/Goroutines/_20211020_151037screenshot.png]]
+
+In the following example, main() runs a goroutine sayHello(), and this goroutine terminates as soon as the main function exits.
+
+#+begin_src go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	go sayHello() // spin off a green thread, and run sayHello function in the green thread
+	time.Sleep(100 * time.Millisecond)
+}
+
+func sayHello() {
+	fmt.Println("Hello")
+}
+
+#+end_src
+
+#+RESULTS:
+: Hello
+
+Goroutine: anoymous function and closure, no arguments but have problems
+
+#+begin_src go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	var msg = "hello"
+	go func() {
+		fmt.Println(msg)
+	}()
+	msg = "good byte" // acutually, reassign the value before the goroutine print it out
+	time.Sleep(100 * time.Millisecond)
+} 
+#+end_src
+
+#+RESULTS:
+: good byte
+
+Pass value to goroutine is better solution and use WaitGroup
+
+#+begin_src go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+var wg = sync.WaitGroup{}
+
+func main() {
+	var msg = "hello"
+	wg.Add(1)
+	go func(msg string) {
+		fmt.Println(msg)
+		wg.Done()
+	}(msg)
+	msg = "good byte" // acutually, reassign the value before the goroutine print it out
+	wg.Wait()
+}
+
+#+end_src
+
+#+RESULTS:
+: hello
+
+Syncronization, locks in main, unlocks asynchronously
+
+#+begin_src go
+package main
+
+import (
+	"fmt"
+	"sync"
+	"runtime"
+)
+
+var wg = sync.WaitGroup{}
+var counter = 0
+var m = sync.RWMutex{}
+
+func main() {
+	runtime.GOMAXPROCS(100)
+	for i := 0; i < 10; i++ {
+		wg.Add(2)
+		m.RLock()
+		go sayHello()
+		m.Lock()
+		go increment()
+	}
+	wg.Wait()
+}
+
+func sayHello() {
+	fmt.Printf("Hello #%v\n", counter)
+	m.RUnlock()
+	wg.Done()
+}
+
+func increment() {
+	counter++
+	m.Unlock()
+	wg.Done()
+}
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Hello #0
+Hello #1
+Hello #2
+Hello #3
+Hello #4
+Hello #5
+Hello #6
+Hello #7
+Hello #8
+Hello #9
+#+end_example
+
+GOMAXPROCS should be tested the best one before production
+
+#+begin_src go
+package main
+
+import (
+	"fmt"
+	"runtime"
+)
+
+func main() {
+	fmt.Printf("Treads: %v\n", runtime.GOMAXPROCS(-1)) // default is the same as no. of cpu cores, just get how many thread available
+}
+
+#+end_src
+
+#+RESULTS:
+: Treads: 8
+
+** Summary
+
+#+attr_org: :width 600px
+[[file:golang/Goroutines/_20211020_160335screenshot.png]]
+
+#+attr_org: :width 600px
+[[file:golang/Goroutines/_20211020_160540screenshot.png]]
+
+#+attr_org: :width 600px
+[[file:golang/Goroutines/_20211020_160743screenshot.png]]
+
+#+attr_org: :width 600px
+[[file:golang/Goroutines/_20211020_161125screenshot.png]]
 
 
 * Best pratices
@@ -2031,6 +2199,13 @@ func main() {
     - That's not always possible, if you need to access the data fields of the a concrete type,
       do taking the concrete type. 
 
+- Best practices for goroutine
+  + Don't create goroutines in libraries
+    - Let consumer control concurrency
+  + When creating a goroutine, know how it will end
+    - Avoids subtle memory leaks
+  + Chck for race conditions at compile time
+    - =go run -race src/main.go=
 
 * References
 - https://www.youtube.com/watch?v=YS4e4q9oBaU
