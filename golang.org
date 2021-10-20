@@ -1,6 +1,6 @@
 #+TITLE: Golang Study Notes
 
-This is my personal ongoing Golang studing notes. Sources codes and results are embedded into
+This is my personal ongoing Golang studying notes. Sources codes and results are embedded into
 the notes. Some notes are embedded in the comments.
 
 * Introduction
