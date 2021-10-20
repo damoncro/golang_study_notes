@@ -1,0 +1,2036 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-10-20 Wed 09:46 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Golang Study Notes</title>
+<meta name="author" content="Damon Chen" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+</style>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Golang Study Notes</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgd9e6102">1. Introduction</a></li>
+<li><a href="#org513cf09">2. Setting Up a Development Environment</a></li>
+<li><a href="#org91b5cdb">3. Variables</a>
+<ul>
+<li><a href="#org2a47b0c">3.1. Shadowing</a></li>
+<li><a href="#org23abcd2">3.2. Not declare</a></li>
+<li><a href="#org4915bf5">3.3. Visibility</a></li>
+<li><a href="#org3bde292">3.4. convertion: may lose information</a></li>
+<li><a href="#orgd0f6451">3.5. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org244609c">4. Primitives</a>
+<ul>
+<li><a href="#org3f0a825">4.1. Agenda</a></li>
+<li><a href="#orgc566d7a">4.2. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org6e9cc69">5. Constants</a>
+<ul>
+<li><a href="#orgb482c21">5.1. Agenda</a></li>
+<li><a href="#org5af3848">5.2. Summary</a></li>
+</ul>
+</li>
+<li><a href="#orgc23fd5d">6. Arrays and Slices</a>
+<ul>
+<li><a href="#org6b44dac">6.1. Agenda</a></li>
+<li><a href="#org9a49599">6.2. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org39ad264">7. Maps and Structs</a>
+<ul>
+<li><a href="#org34cf41d">7.1. Agenda</a></li>
+<li><a href="#org738b787">7.2. Maps</a></li>
+<li><a href="#org96b6e63">7.3. Structs</a></li>
+<li><a href="#org4aead9d">7.4. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org0f1a6c2">8. If and Switch Statements</a>
+<ul>
+<li><a href="#org960fc6c">8.1. Agenda</a></li>
+<li><a href="#org5701efa">8.2. If Statement</a></li>
+<li><a href="#org9910cdc">8.3. Switch</a></li>
+<li><a href="#org164d453">8.4. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org33fd17e">9. Looping</a>
+<ul>
+<li><a href="#org293aaca">9.1. Agenda</a></li>
+<li><a href="#orgf21515c">9.2. For loop</a></li>
+<li><a href="#org2c12e50">9.3. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org2d89514">10. Defer, Panic, and Recover</a>
+<ul>
+<li><a href="#org2262db5">10.1. Defer</a></li>
+<li><a href="#orgffa3f3a">10.2. Panic</a></li>
+<li><a href="#orgbd9fe2f">10.3. Recover</a></li>
+<li><a href="#org398cd81">10.4. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org90f10e0">11. Pointer</a>
+<ul>
+<li><a href="#org8dd962e">11.1. Agenda</a></li>
+<li><a href="#org765dc6f">11.2. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org2e7bbdc">12. Functions</a>
+<ul>
+<li><a href="#org1f48fa4">12.1. Agenda</a></li>
+<li><a href="#orga6199ba">12.2. Functions</a></li>
+<li><a href="#org436c710">12.3. Method</a></li>
+<li><a href="#org0aaa82e">12.4. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org1d5fa2d">13. Interfaces</a>
+<ul>
+<li><a href="#org275d872">13.1. Agenda</a></li>
+</ul>
+</li>
+<li><a href="#org8bd22de">14. Best pratices</a></li>
+<li><a href="#org6fc9d4c">15. References</a></li>
+</ul>
+</div>
+</div>
+<p>
+This is my personal ongoing Golang studing notes. Sources codes and results are embedded into
+the notes. Some notes are embedded in the comments.
+</p>
+
+<div id="outline-container-orgd9e6102" class="outline-2">
+<h2 id="orgd9e6102"><span class="section-number-2">1.</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>Strong and statically typed</li>
+<li>Excellent community</li>
+<li>Key features
+<ul class="org-ul">
+<li>Simplicity</li>
+<li>Fast compile times</li>
+<li>Garbage collected</li>
+<li>Built-in concurrency</li>
+<li>Compile to standalone binaries</li>
+</ul></li>
+</ul>
+
+<p>
+<a href="https://golang.org">https://golang.org</a>
+</p>
+
+
+<p>
+<a href="https://pkg.go.dev/std">https://pkg.go.dev/std</a>
+A Tour of go
+Effective go
+Command Documentation ¶
+</p>
+
+<p>
+<a href="https://pkg.go.dev/std">https://pkg.go.dev/std</a>
+<a href="https://forum.golangbridge.org/">https://forum.golangbridge.org/</a>
+<a href="https://blog.gopheracademy.com/gophers-slack-community/">https://blog.gopheracademy.com/gophers-slack-community/</a>
+<a href="https://play.golang.org/">https://play.golang.org/</a>
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">every go has package</span>
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"Hello"</span>)
+}
+
+</pre>
+</div>
+
+<p>
+&ldquo;&rdquo;: quotation mark
+</p>
+</div>
+</div>
+
+<div id="outline-container-org513cf09" class="outline-2">
+<h2 id="org513cf09"><span class="section-number-2">2.</span> Setting Up a Development Environment</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+export GOROOT=/usr/local/go # where go is installed
+export PATH=$PATH:$GOROOT/bin
+go version
+</p>
+
+<p>
+export GOPATH=~/golib # binaries path, download the source here
+export PATH=$PATH:$GOPATH/bin
+</p>
+
+<p>
+go get github.com/nsf/gocode # autocomplete
+</p>
+
+<p>
+export GOPATH=$GOPATH:~/code # anohter GOPATH, multiple path is great for project/workspace
+</p>
+
+<p>
+bin
+pkg # intermediate binaries, for avoid recompiling
+src
+    github.com
+        vansimke
+            firstapp # go get will recreate this structure?
+                Main.go
+</p>
+
+
+<p>
+go run ${the path of .go}
+go build ${paht of the pkg name}
+go install ${paht of the pkg name}
+</p>
+
+
+<p>
+go standlone itself is go workspace, has src, pkg etc
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org91b5cdb" class="outline-2">
+<h2 id="org91b5cdb"><span class="section-number-2">3.</span> Variables</h2>
+<div class="outline-text-2" id="text-3">
+
+<div id="org6a3b61f" class="figure">
+<p><img src="golang/Variables/_20211014_221954screenshot.png" alt="_20211014_221954screenshot.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">every go has package</span>
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #97365B; font-weight: bold;">42</span>)
+}
+
+</pre>
+</div>
+
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">every go has package</span>
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+
+<span style="color: #3B6EA8;">var</span> <span style="color: #842879;">l</span> <span style="color: #9A7500;">int</span> = <span style="color: #97365B; font-weight: bold;">42</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">declare</span>
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">var l float = "error"</span>
+
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">wrap in var block</span>
+<span style="color: #3B6EA8;">var</span> {
+    name <span style="color: #9A7500;">string</span> = <span style="color: #4F894C;">"Damon"</span>
+    number
+ }
+
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">multiple var blocks</span>
+<span style="color: #3B6EA8;">var</span> {
+}
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">i</span> <span style="color: #9A7500;">int</span> <span style="color: #8b94a5;">//</span><span style="color: #8b94a5;">multiple line: var name type, in rust let i: u32 = 42</span>
+    i = <span style="color: #97365B; font-weight: bold;">42</span>
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">j</span> <span style="color: #9A7500;">float32</span> = <span style="color: #97365B; font-weight: bold;">42</span> <span style="color: #8b94a5;">//</span><span style="color: #8b94a5;">Same line: var name type, in rust let i: u32 = 42</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">k := 99 // no var and int, shorthand version</span>
+    <span style="color: #842879;">k</span> := <span style="color: #97365B; font-weight: bold;">99</span>.  <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">note the period</span>
+    fmt.<span style="color: #29838D;">Println</span>(i)
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%v, %T"</span>, j, j) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">print value and type</span>
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%v, %T"</span>, k, k) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">print value and type</span>
+    fmt.<span style="color: #29838D;">Println</span>(l)
+
+}
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org2a47b0c" class="outline-3">
+<h3 id="org2a47b0c"><span class="section-number-3">3.1.</span> Shadowing</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+can not delace two times in same scope, but it is ok for different scope (shadowing) -&gt;
+different than rust, rust&rsquo;s shadowing can be in same scope
+</p>
+</div>
+</div>
+
+<div id="outline-container-org23abcd2" class="outline-3">
+<h3 id="org23abcd2"><span class="section-number-3">3.2.</span> Not declare</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+declare but not use -&gt; compile time error
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4915bf5" class="outline-3">
+<h3 id="org4915bf5"><span class="section-number-3">3.3.</span> Visibility</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+package level: lower case
+globcal visible: upper case
+scope level
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org3bde292" class="outline-3">
+<h3 id="org3bde292"><span class="section-number-3">3.4.</span> convertion: may lose information</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+float(x)
+int(x)
+string(x): if x = 42, output will be *, should use <code>strconv</code> instead
+strconv.Itoa(x): convert between number and string
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd0f6451" class="outline-3">
+<h3 id="orgd0f6451"><span class="section-number-3">3.5.</span> Summary</h3>
+<div class="outline-text-3" id="text-3-5">
+
+<div id="org6d06ffd" class="figure">
+<p><img src="golang/Variables/_20211014_224640screenshot.png" alt="_20211014_224640screenshot.png" />
+</p>
+</div>
+
+
+<div id="org685273d" class="figure">
+<p><img src="golang/Variables/_20211014_224510screenshot.png" alt="_20211014_224510screenshot.png" />
+</p>
+</div>
+
+
+
+<div id="org56a79c4" class="figure">
+<p><img src="golang/Variables/_20211014_224530screenshot.png" alt="_20211014_224530screenshot.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org244609c" class="outline-2">
+<h2 id="org244609c"><span class="section-number-2">4.</span> Primitives</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org3f0a825" class="outline-3">
+<h3 id="org3f0a825"><span class="section-number-3">4.1.</span> Agenda</h3>
+<div class="outline-text-3" id="text-4-1">
+
+<div id="org13e4def" class="figure">
+<p><img src="golang/Primitives/_20211014_224851screenshot.png" alt="_20211014_224851screenshot.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+
+<span style="color: #3B6EA8;">import</span> (
+ <span style="color: #4F894C;">"fmt"</span>
+) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">please notice it is ()</span>
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">n</span> <span style="color: #9A7500;">bool</span> = <span style="color: #97365B;">true</span>
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%v, %T\n"</span>, n, n) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">Please notice it is P rather than p</span>
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">Logical test</span>
+    <span style="color: #842879;">m</span> := <span style="color: #97365B; font-weight: bold;">1</span> == <span style="color: #97365B; font-weight: bold;">1</span>
+    <span style="color: #842879;">l</span> := <span style="color: #97365B; font-weight: bold;">2</span> == <span style="color: #97365B; font-weight: bold;">1</span>
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%v, %T\n"</span>, m, m)
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%v, %T\n"</span>, l, l)
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">Default</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">var n bool // false</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">n := 32 // default is init</span>
+
+    <span style="color: #842879;">o</span> := <span style="color: #97365B; font-weight: bold;">3.14</span>
+    o = <span style="color: #97365B; font-weight: bold;">13</span>.7e72
+    o = <span style="color: #97365B; font-weight: bold;">2</span>.1E14
+
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">n</span> <span style="color: #9A7500;">complex64</span> = <span style="color: #29838D;">complex</span>(<span style="color: #97365B; font-weight: bold;">5</span>, <span style="color: #97365B; font-weight: bold;">12</span>)
+}
+
+</pre>
+</div>
+
+<p>
+Every value when init Default it is 0 or false
+Default is int
+we have int8, int16, int32, int64, uint8, uint16, uint32, no uint64
+</p>
+
+<ul class="org-ul">
+<li></li>
+
+<li></li>
+</ul>
+<p>
+*
+10 / 3 = 3  drop reminder
+10 % 3 = 1  reminder
+</p>
+
+<p>
+int can not add int8, need use init() convert first
+</p>
+
+<p>
+&amp;, |, ^, &amp;^ (how ^ and &amp;^ work?)
+</p>
+
+<p>
+&lt;&lt;
+&gt;&gt;
+</p>
+
+<p>
+float32, float64 =&gt; only + - * /
+</p>
+
+<p>
+complex64, complex128 =&gt; real() and imag() funxtion, return float32 or float64
+</p>
+
+<p>
+string type (UTF8)
+</p>
+<ul class="org-ul">
+<li>index with s[2] just like array, return as a uint8</li>
+<li>cannot manipulate the char using s[2] = &ldquo;u&rdquo;</li>
+<li>[]byte(s): string to byte slices</li>
+</ul>
+
+<p>
+rune
+</p>
+<ul class="org-ul">
+<li>read api: ReadRune</li>
+<li>utf32</li>
+<li>Actually is int32 allias</li>
+<li><code>var r rune = 'a'</code></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgc566d7a" class="outline-3">
+<h3 id="orgc566d7a"><span class="section-number-3">4.2.</span> Summary</h3>
+<div class="outline-text-3" id="text-4-2">
+
+<div id="org74dd3a2" class="figure">
+<p><img src="golang/Primitives/_20211017_202320screenshot.png" alt="_20211017_202320screenshot.png" />
+</p>
+</div>
+
+
+<div id="org982ae80" class="figure">
+<p><img src="golang/Primitives/_20211017_202259screenshot.png" alt="_20211017_202259screenshot.png" />
+</p>
+</div>
+
+
+<div id="orgfb450e4" class="figure">
+<p><img src="golang/Primitives/_20211017_202217screenshot.png" alt="_20211017_202217screenshot.png" />
+</p>
+</div>
+
+
+<div id="org670f88c" class="figure">
+<p><img src="golang/Primitives/_20211017_202203screenshot.png" alt="_20211017_202203screenshot.png" />
+</p>
+</div>
+
+
+<div id="org69a0e45" class="figure">
+<p><img src="golang/Primitives/_20211017_202146screenshot.png" alt="_20211017_202146screenshot.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6e9cc69" class="outline-2">
+<h2 id="org6e9cc69"><span class="section-number-2">5.</span> Constants</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orgb482c21" class="outline-3">
+<h3 id="orgb482c21"><span class="section-number-3">5.1.</span> Agenda</h3>
+<div class="outline-text-3" id="text-5-1">
+
+<div id="org53299bc" class="figure">
+<p><img src="golang/Constants/_20211017_202409screenshot.png" alt="_20211017_202409screenshot.png" />
+</p>
+</div>
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+
+<span style="color: #3B6EA8;">const</span> <span style="color: #97365B;">a</span> <span style="color: #9A7500;">int16</span> = <span style="color: #97365B; font-weight: bold;">27</span>
+
+<span style="color: #3B6EA8;">const</span> <span style="color: #97365B;">a</span> = <span style="color: #97365B;">iota</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">0, int</span>
+
+<span style="color: #3B6EA8;">const</span> (
+    <span style="color: #97365B;">a</span> = <span style="color: #97365B;">iota</span>
+    <span style="color: #97365B;">b</span> = <span style="color: #97365B;">iota</span>
+    <span style="color: #97365B;">c</span> = <span style="color: #97365B;">iota</span>
+) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">const block</span>
+
+<span style="color: #3B6EA8;">const</span> (
+    <span style="color: #97365B;">error</span> = <span style="color: #97365B;">iota</span>
+    <span style="color: #97365B;">cat</span>
+    <span style="color: #97365B;">dog</span>
+    <span style="color: #97365B;">snake</span>
+) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">it will work</span>
+
+<span style="color: #3B6EA8;">const</span> (
+    <span style="color: #97365B;">_</span> = <span style="color: #97365B;">iota</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">start from 0, but not assign the memory, optimized by compile</span>
+    <span style="color: #97365B;">cat</span>
+    <span style="color: #97365B;">dog</span>
+    <span style="color: #97365B;">snake</span>
+) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">it will work</span>
+
+<span style="color: #3B6EA8;">const</span> (
+    <span style="color: #97365B;">_</span> = <span style="color: #97365B;">iota</span> + <span style="color: #97365B; font-weight: bold;">5</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">can do some evulation on constant, fix offset</span>
+    <span style="color: #97365B;">cat</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">will be 6</span>
+    <span style="color: #97365B;">dog</span>
+    <span style="color: #97365B;">snake</span>
+) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">it will work</span>
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #3B6EA8;">const</span> <span style="color: #97365B;">myConst</span>
+    <span style="color: #3B6EA8;">const</span> <span style="color: #97365B;">MyConst</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">export</span>
+    <span style="color: #3B6EA8;">const</span> <span style="color: #97365B;">MyConst</span> <span style="color: #9A7500;">int</span> = <span style="color: #97365B; font-weight: bold;">42</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">type constant, can not change later</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">can not assign run time value to const, no rust const function?</span>
+    <span style="color: #3B6EA8;">const</span> <span style="color: #97365B;">a</span> <span style="color: #9A7500;">int</span> = <span style="color: #97365B; font-weight: bold;">14</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">shawdow a </span>
+    <span style="color: #3B6EA8;">const</span> <span style="color: #97365B;">a</span> = <span style="color: #97365B; font-weight: bold;">42</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">infer by compiler (the type depends on when we use a in program)</span>
+
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">specialType</span> <span style="color: #9A7500;">int</span>
+    specialType = cat <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">check if type specialType is initialized by constant or not, if not, will return as 0, which happens to be the constant - error</span>
+}
+</pre>
+</div>
+
+<p>
+Constant Offset treat in golang:
+</p>
+
+
+<div id="org52b17fa" class="figure">
+<p><img src="golang/Constants/_20211017_223907screenshot.png" alt="_20211017_223907screenshot.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+<span style="color: #3B6EA8;">import</span> (<span style="color: #4F894C;">"fmt"</span>)
+<span style="color: #3B6EA8;">const</span> (
+    <span style="color: #97365B;">_</span> = <span style="color: #97365B;">iota</span>
+    <span style="color: #97365B;">KB</span> = <span style="color: #97365B; font-weight: bold;">1</span> &lt;&lt; (<span style="color: #97365B; font-weight: bold;">10</span> * <span style="color: #97365B;">iota</span>)
+    <span style="color: #97365B;">MB</span>
+    <span style="color: #97365B;">GB</span>
+)
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+
+fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"%v, %v, %v"</span>, KB, MB, GB)
+
+}
+</pre>
+</div>
+
+<p>
+Bit shift, bit mask:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+<span style="color: #3B6EA8;">import</span> (<span style="color: #4F894C;">"fmt"</span>)
+<span style="color: #3B6EA8;">const</span> (
+    <span style="color: #97365B;">isAdmin</span> = <span style="color: #97365B; font-weight: bold;">1</span> &lt;&lt; <span style="color: #97365B;">iota</span>
+    <span style="color: #97365B;">isHeadquarters</span>
+    <span style="color: #97365B;">canSeeFinancial</span>
+)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+
+fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"%v, %v, %v"</span>, isAdmin, isHeadquarters, canSeeFinancial)
+<span style="color: #3B6EA8;">var</span> <span style="color: #842879;">roles</span> <span style="color: #9A7500;">byte</span> = isAdmin | isHeadquarters | canSeeFinancial
+fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%b\n"</span>, roles)
+
+fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"Is Admin? %v\n"</span>, isAdmin &amp; roles == isAdmin)
+
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5af3848" class="outline-3">
+<h3 id="org5af3848"><span class="section-number-3">5.2.</span> Summary</h3>
+<div class="outline-text-3" id="text-5-2">
+
+<div id="org5672e7b" class="figure">
+<p><img src="golang/Constants/_20211017_225033screenshot.png" alt="_20211017_225033screenshot.png" />
+</p>
+</div>
+
+
+<div id="orgf81ca4e" class="figure">
+<p><img src="golang/Constants/_20211017_225124screenshot.png" alt="_20211017_225124screenshot.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc23fd5d" class="outline-2">
+<h2 id="orgc23fd5d"><span class="section-number-2">6.</span> Arrays and Slices</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+<div id="outline-container-org6b44dac" class="outline-3">
+<h3 id="org6b44dac"><span class="section-number-3">6.1.</span> Agenda</h3>
+<div class="outline-text-3" id="text-6-1">
+
+<div id="org91c4615" class="figure">
+<p><img src="golang/Arrays_and_Slices/_20211018_103904screenshot.png" alt="_20211018_103904screenshot.png" />
+</p>
+</div>
+
+<p>
+arrays forms the basics of slices
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+<span style="color: #3B6EA8;">import</span> (<span style="color: #4F894C;">"fmt"</span>)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">grades := [3]int // [no of elements]type</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">grades := [3]int{97,85,93} // init it </span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">grades := [...]int{97,85,93} // no need no of elements</span>
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">students</span> [<span style="color: #97365B; font-weight: bold;">3</span>]<span style="color: #9A7500;">string</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">empty string array</span>
+    students[<span style="color: #97365B; font-weight: bold;">0</span>] = <span style="color: #4F894C;">"Lisa"</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">modify the array</span>
+    students[<span style="color: #97365B; font-weight: bold;">1</span>] = <span style="color: #4F894C;">"Ahmed"</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">modify the array</span>
+    students[<span style="color: #97365B; font-weight: bold;">2</span>] = <span style="color: #4F894C;">"Arnold"</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">modify the array</span>
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%v, %v, %v\n"</span>, students, students[<span style="color: #97365B; font-weight: bold;">1</span>], <span style="color: #29838D;">len</span>(students)) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">access the array</span>
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">array of array</span>
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">identityMatrix</span> [<span style="color: #97365B; font-weight: bold;">3</span>][<span style="color: #97365B; font-weight: bold;">3</span>]<span style="color: #9A7500;">int</span>
+    identityMatrix[<span style="color: #97365B; font-weight: bold;">0</span>] = [<span style="color: #97365B; font-weight: bold;">3</span>]<span style="color: #9A7500;">int</span>{<span style="color: #97365B; font-weight: bold;">1</span>, <span style="color: #97365B; font-weight: bold;">0</span>, <span style="color: #97365B; font-weight: bold;">0</span>}
+    identityMatrix[<span style="color: #97365B; font-weight: bold;">1</span>] = [<span style="color: #97365B; font-weight: bold;">3</span>]<span style="color: #9A7500;">int</span>{<span style="color: #97365B; font-weight: bold;">0</span>, <span style="color: #97365B; font-weight: bold;">1</span>, <span style="color: #97365B; font-weight: bold;">0</span>}
+    identityMatrix[<span style="color: #97365B; font-weight: bold;">2</span>] = [<span style="color: #97365B; font-weight: bold;">3</span>]<span style="color: #9A7500;">int</span>{<span style="color: #97365B; font-weight: bold;">0</span>, <span style="color: #97365B; font-weight: bold;">0</span>, <span style="color: #97365B; font-weight: bold;">1</span>}
+
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%v\n"</span>, identityMatrix)
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">go copy array</span>
+
+    <span style="color: #842879;">a</span> := [...]<span style="color: #9A7500;">int</span>{<span style="color: #97365B; font-weight: bold;">1</span>, <span style="color: #97365B; font-weight: bold;">2</span>, <span style="color: #97365B; font-weight: bold;">3</span>}
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">b := a // actually copy the whole array, could be expensive</span>
+    <span style="color: #842879;">b</span> := &amp;a <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">b points to a, same data</span>
+    b[<span style="color: #97365B; font-weight: bold;">1</span>] = <span style="color: #97365B; font-weight: bold;">5</span>
+    fmt.<span style="color: #29838D;">Println</span>(a)
+    fmt.<span style="color: #29838D;">Println</span>(b)
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">slice</span>
+    <span style="color: #842879;">c</span> := []<span style="color: #9A7500;">int</span>{<span style="color: #97365B; font-weight: bold;">1</span>, <span style="color: #97365B; font-weight: bold;">2</span>, <span style="color: #97365B; font-weight: bold;">3</span>, <span style="color: #97365B; font-weight: bold;">4</span>, <span style="color: #97365B; font-weight: bold;">5</span>, <span style="color: #97365B; font-weight: bold;">6</span>, <span style="color: #97365B; font-weight: bold;">7</span>, <span style="color: #97365B; font-weight: bold;">8</span>, <span style="color: #97365B; font-weight: bold;">9</span>, <span style="color: #97365B; font-weight: bold;">10</span>} <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">just add three dots turn slice into array</span>
+    <span style="color: #842879;">d</span> := c <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">actually assign the reference!</span>
+    d[<span style="color: #97365B; font-weight: bold;">1</span>] = <span style="color: #97365B; font-weight: bold;">5</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">PAY ATTENTION: c also changed!</span>
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%v, %v\n"</span>, c, d)
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #29838D;">len</span>(c))
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #29838D;">cap</span>(c))
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">fisrt inclusive, second exclusive, remember start from index 0</span>
+    <span style="color: #842879;">e</span> := c[:] <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">all</span>
+    <span style="color: #842879;">f</span> := c[<span style="color: #97365B; font-weight: bold;">3</span>:] <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">4th to end</span>
+    <span style="color: #842879;">g</span> := c[:<span style="color: #97365B; font-weight: bold;">6</span>] <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">first 6</span>
+    <span style="color: #842879;">h</span> := c[<span style="color: #97365B; font-weight: bold;">3</span>:<span style="color: #97365B; font-weight: bold;">6</span>] <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">4th, 5th, and 6th</span>
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%v\n"</span>, e)
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%v\n"</span>, f)
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%v\n"</span>, g)
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%v\n"</span>, h)
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">double cap?</span>
+    <span style="color: #842879;">i</span> := []<span style="color: #9A7500;">int</span>{}
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%v, %v, %v\n"</span>, i, <span style="color: #29838D;">len</span>(i), <span style="color: #29838D;">cap</span>(i))
+    i = <span style="color: #29838D;">append</span>(i, <span style="color: #97365B; font-weight: bold;">1</span>)
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%v, %v, %v\n"</span>, i, <span style="color: #29838D;">len</span>(i), <span style="color: #29838D;">cap</span>(i))
+    i = <span style="color: #29838D;">append</span>(i, <span style="color: #97365B; font-weight: bold;">2</span>, <span style="color: #97365B; font-weight: bold;">3</span>, <span style="color: #97365B; font-weight: bold;">4</span>, <span style="color: #97365B; font-weight: bold;">5</span>) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">append more than 1 element</span>
+    i = <span style="color: #29838D;">append</span>(i, []<span style="color: #9A7500;">int</span>{<span style="color: #97365B; font-weight: bold;">2</span>, <span style="color: #97365B; font-weight: bold;">3</span>, <span style="color: #97365B; font-weight: bold;">4</span>, <span style="color: #97365B; font-weight: bold;">5</span>}...) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">concat slice, three dots will decompose the slice</span>
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%v, %v, %v\n"</span>, i, <span style="color: #29838D;">len</span>(i), <span style="color: #29838D;">cap</span>(i))
+
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">make function make the slice do not expand out of our expected (double capacity if fill up)</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">use make to define the capacity that closes to our expected value!</span>
+    <span style="color: #842879;">j</span> := <span style="color: #29838D;">make</span>([]<span style="color: #9A7500;">int</span>, <span style="color: #97365B; font-weight: bold;">3</span>) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">make slice of len 3 all set to zero (go policy)</span>
+    <span style="color: #842879;">k</span> := <span style="color: #29838D;">make</span>([]<span style="color: #9A7500;">int</span>, <span style="color: #97365B; font-weight: bold;">3</span>, <span style="color: #97365B; font-weight: bold;">100</span>) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">make slice of len 3 and cap 100 all set to zero (go policy)</span>
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"j: %v, %v, %v\n"</span>, j, <span style="color: #29838D;">len</span>(j), <span style="color: #29838D;">cap</span>(j))
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"k: %v, %v, %v\n"</span>, k, <span style="color: #29838D;">len</span>(k), <span style="color: #29838D;">cap</span>(k))
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">remove last element, make use of len</span>
+    <span style="color: #842879;">l</span> := []<span style="color: #9A7500;">int</span>{<span style="color: #97365B; font-weight: bold;">1</span>, <span style="color: #97365B; font-weight: bold;">2</span>, <span style="color: #97365B; font-weight: bold;">3</span>, <span style="color: #97365B; font-weight: bold;">4</span>, <span style="color: #97365B; font-weight: bold;">5</span>}
+    <span style="color: #842879;">m</span> := l[:<span style="color: #29838D;">len</span>(l)-<span style="color: #97365B; font-weight: bold;">1</span>] <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">remove the last element, exclusive the last element</span>
+    fmt.<span style="color: #29838D;">Println</span>(m)
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">remove the middle elements</span>
+    <span style="color: #842879;">n</span> := []<span style="color: #9A7500;">int</span>{<span style="color: #97365B; font-weight: bold;">1</span>, <span style="color: #97365B; font-weight: bold;">2</span>, <span style="color: #97365B; font-weight: bold;">3</span>, <span style="color: #97365B; font-weight: bold;">4</span>, <span style="color: #97365B; font-weight: bold;">5</span>}
+    <span style="color: #842879;">o</span> := <span style="color: #29838D;">append</span>(n[:<span style="color: #97365B; font-weight: bold;">2</span>], n[<span style="color: #97365B; font-weight: bold;">3</span>:]...) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">notice need to decompose with ..., this operation is dangerous, n will be changed!</span>
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"o: %v\n"</span>, o)
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"n: %v\n"</span>, n) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">n is no longer the original value, if really n unchanged, we need to use loop to copy n out first</span>
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9a49599" class="outline-3">
+<h3 id="org9a49599"><span class="section-number-3">6.2.</span> Summary</h3>
+<div class="outline-text-3" id="text-6-2">
+
+<div id="org4ca8ee8" class="figure">
+<p><img src="golang/Arrays_and_Slices/_20211018_122747screenshot.png" alt="_20211018_122747screenshot.png" />
+</p>
+</div>
+
+
+<div id="orgfb778fb" class="figure">
+<p><img src="golang/Arrays_and_Slices/_20211018_123005screenshot.png" alt="_20211018_123005screenshot.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org39ad264" class="outline-2">
+<h2 id="org39ad264"><span class="section-number-2">7.</span> Maps and Structs</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-org34cf41d" class="outline-3">
+<h3 id="org34cf41d"><span class="section-number-3">7.1.</span> Agenda</h3>
+<div class="outline-text-3" id="text-7-1">
+
+<div id="orgb78eb35" class="figure">
+<p><img src="golang/Maps_and_Structs/_20211018_123156screenshot.png" alt="_20211018_123156screenshot.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org738b787" class="outline-3">
+<h3 id="org738b787"><span class="section-number-3">7.2.</span> Maps</h3>
+<div class="outline-text-3" id="text-7-2">
+<p>
+map is hashmap in rust
+</p>
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+<span style="color: #3B6EA8;">import</span> (<span style="color: #4F894C;">"fmt"</span>)
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #842879;">stagePopulations</span> := <span style="color: #29838D;">make</span>(<span style="color: #3B6EA8;">map</span>[<span style="color: #9A7500;">string</span>]<span style="color: #9A7500;">int</span>) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">you can use make to make map</span>
+    stagePopulations = <span style="color: #3B6EA8;">map</span>[<span style="color: #9A7500;">string</span>]<span style="color: #9A7500;">int</span>{ <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">map[key]value, if not use map, please use := </span>
+        <span style="color: #4F894C;">"California"</span>: <span style="color: #97365B; font-weight: bold;">39250017</span>,
+        <span style="color: #4F894C;">"Texas"</span>: <span style="color: #97365B; font-weight: bold;">27862596</span>,
+        <span style="color: #4F894C;">"Florida"</span>: <span style="color: #97365B; font-weight: bold;">20612439</span>, <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">do not forget the last comma, otherwise will compile error</span>
+    }
+
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">m := map[[]int]string{} // slice is not a valid key type</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">m := map[[3]int]string{}// array is a valid key type</span>
+
+    fmt.<span style="color: #29838D;">Println</span>(stagePopulations)
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #29838D;">len</span>(stagePopulations)) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">len</span>
+    stagePopulations[<span style="color: #4F894C;">"Georgia"</span>] = <span style="color: #97365B; font-weight: bold;">13514169</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">append element is simple; element order in the map may be changed</span>
+    <span style="color: #29838D;">delete</span>(stagePopulations, <span style="color: #4F894C;">"Florida"</span>) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">delete element</span>
+    fmt.<span style="color: #29838D;">Println</span>(stagePopulations)
+    fmt.<span style="color: #29838D;">Println</span>(stagePopulations[<span style="color: #4F894C;">"Texas"</span>]) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">access the value</span>
+    fmt.<span style="color: #29838D;">Println</span>(stagePopulations[<span style="color: #4F894C;">"Florida"</span>]) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">access not existed value, return 0!!!</span>
+
+    <span style="color: #842879;">florida</span>, <span style="color: #842879;">ok</span> := stagePopulations[<span style="color: #4F894C;">"Florida"</span>] <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">use ok sytax to validate the element exists or not</span>
+    fmt.<span style="color: #29838D;">Println</span>(florida, ok) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">the name "ok" is just a convension</span>
+
+    <span style="color: #842879;">_</span>, <span style="color: #842879;">ok2</span> := stagePopulations[<span style="color: #4F894C;">"Florida"</span>] <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">use _ and ok to just check the present</span>
+    fmt.<span style="color: #29838D;">Println</span>(ok2)
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">jsut like slice, assign will will assign the reference</span>
+    <span style="color: #842879;">sp</span> := stagePopulations
+    <span style="color: #29838D;">delete</span>(sp, <span style="color: #4F894C;">"Georgia"</span>) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">will delete statePopulations's Georgia as well</span>
+    fmt.<span style="color: #29838D;">Println</span>(stagePopulations)
+    fmt.<span style="color: #29838D;">Println</span>(sp)
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org96b6e63" class="outline-3">
+<h3 id="org96b6e63"><span class="section-number-3">7.3.</span> Structs</h3>
+<div class="outline-text-3" id="text-7-3">
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+    <span style="color: #4F894C;">"reflect"</span>
+) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">reflect used for tags in struct</span>
+<span style="color: #3B6EA8;">type</span> <span style="color: #9A7500;">Doctor</span> <span style="color: #3B6EA8;">struct</span> { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">Captial export</span>
+    Number <span style="color: #9A7500;">int</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">export the field with just uppercase!</span>
+    ActorName <span style="color: #9A7500;">string</span>
+    Companions []<span style="color: #9A7500;">string</span>
+} <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">Doctor is a new type</span>
+
+<span style="color: #3B6EA8;">type</span> <span style="color: #9A7500;">Animal</span> <span style="color: #3B6EA8;">struct</span> {
+    Name <span style="color: #9A7500;">string</span> <span style="color: #4F894C;">`required max:"100"`</span>
+    Origin <span style="color: #9A7500;">string</span>
+}
+
+<span style="color: #3B6EA8;">type</span> <span style="color: #9A7500;">Bird</span> <span style="color: #3B6EA8;">struct</span> {
+    Animal <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">embed Animal! has-a Animal, no need Animal Animal</span>
+    SpeedKPH <span style="color: #9A7500;">float32</span>
+    CanFly <span style="color: #9A7500;">bool</span>
+}
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #842879;">aDoctor</span> := Doctor {
+        <span style="color: #97365B;">Number</span>: <span style="color: #97365B; font-weight: bold;">3</span>,
+        <span style="color: #97365B;">ActorName</span>: <span style="color: #4F894C;">"Jon"</span>,
+        <span style="color: #97365B;">Companions</span>: []<span style="color: #9A7500;">string</span> {
+            <span style="color: #4F894C;">"Liz"</span>,
+            <span style="color: #4F894C;">"Jo"</span>,
+        }, <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">do not forget common here</span>
+    } <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">go support init the value without specific the field name, but it is dangerous if add new field in struct</span>
+    fmt.<span style="color: #29838D;">Println</span>(aDoctor.ActorName)
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">anonymous struct</span>
+    <span style="color: #842879;">bDoctor</span> := <span style="color: #3B6EA8;">struct</span>{name <span style="color: #9A7500;">string</span>}{<span style="color: #97365B;">name</span>: <span style="color: #4F894C;">"John"</span>}
+    fmt.<span style="color: #29838D;">Println</span>(bDoctor)
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">assign struct is copy the whole struct, just like array, could be expensive</span>
+    <span style="color: #842879;">anotherDoctor</span> := bDoctor
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">anotherDoctor := &amp;bDoctor  // but we can use address to refer to the same struct</span>
+    anotherDoctor.name = <span style="color: #4F894C;">"Tom"</span>
+    fmt.<span style="color: #29838D;">Println</span>(anotherDoctor)
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">Access the embedded struct type fields</span>
+    <span style="color: #842879;">bird</span> := <span style="color: #9A7500;">Bird</span>{}
+    bird.Name = <span style="color: #4F894C;">"Emu"</span>
+    bird.Origin = <span style="color: #4F894C;">"Chinese"</span>
+    bird.SpeedKPH = <span style="color: #97365B; font-weight: bold;">48</span>
+    bird.CanFly =  <span style="color: #97365B;">false</span>
+    fmt.<span style="color: #29838D;">Println</span>(bird.Name)
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">init the Animal inside bird</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">Notice the Animal field, we can directly access the name!</span>
+    <span style="color: #842879;">bird2</span> := Bird {
+        <span style="color: #97365B;">Animal</span>: <span style="color: #9A7500;">Animal</span>{<span style="color: #97365B;">Name</span>: <span style="color: #4F894C;">"Emu"</span>, <span style="color: #97365B;">Origin</span>: <span style="color: #4F894C;">"Chinese"</span>},
+        <span style="color: #97365B;">SpeedKPH</span>: <span style="color: #97365B; font-weight: bold;">48</span>,
+        <span style="color: #97365B;">CanFly</span>: <span style="color: #97365B;">false</span>,
+    }
+    fmt.<span style="color: #29838D;">Println</span>(bird2.Name)
+
+    <span style="color: #842879;">t</span> := reflect.<span style="color: #29838D;">TypeOf</span>(<span style="color: #9A7500;">Animal</span>{}) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">Empty Animal struct</span>
+    <span style="color: #842879;">field</span>, <span style="color: #842879;">_</span> := t.<span style="color: #29838D;">FieldByName</span>(<span style="color: #4F894C;">"Name"</span>)
+    fmt.<span style="color: #29838D;">Println</span>(field.Tag)
+
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4aead9d" class="outline-3">
+<h3 id="org4aead9d"><span class="section-number-3">7.4.</span> Summary</h3>
+<div class="outline-text-3" id="text-7-4">
+
+<div id="org6722950" class="figure">
+<p><img src="golang/Maps_and_Structs/_20211018_145907screenshot.png" alt="_20211018_145907screenshot.png" />
+</p>
+</div>
+
+
+<div id="orgc694c90" class="figure">
+<p><img src="golang/Maps_and_Structs/_20211018_150117screenshot.png" alt="_20211018_150117screenshot.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0f1a6c2" class="outline-2">
+<h2 id="org0f1a6c2"><span class="section-number-2">8.</span> If and Switch Statements</h2>
+<div class="outline-text-2" id="text-8">
+</div>
+<div id="outline-container-org960fc6c" class="outline-3">
+<h3 id="org960fc6c"><span class="section-number-3">8.1.</span> Agenda</h3>
+<div class="outline-text-3" id="text-8-1">
+
+<div id="org4a16106" class="figure">
+<p><img src="golang/If_and_Switch_Statements/_20211018_150244screenshot.png" alt="_20211018_150244screenshot.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5701efa" class="outline-3">
+<h3 id="org5701efa"><span class="section-number-3">8.2.</span> If Statement</h3>
+<div class="outline-text-3" id="text-8-2">
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+    <span style="color: #4F894C;">"math"</span>
+)
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">boolean check</span>
+    <span style="color: #3B6EA8;">if</span> <span style="color: #97365B;">true</span> { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">just like rust, no need ()</span>
+        fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"HELLO"</span>)
+    }
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">init and check</span>
+    statePopulations := <span style="color: #3B6EA8;">map</span>[<span style="color: #9A7500;">string</span>]<span style="color: #9A7500;">int</span>{ <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">map[key]value, if not use map, please use := </span>
+        <span style="color: #4F894C;">"California"</span>: <span style="color: #97365B; font-weight: bold;">39250017</span>,
+        <span style="color: #4F894C;">"Texas"</span>: <span style="color: #97365B; font-weight: bold;">27862596</span>,
+        <span style="color: #4F894C;">"Florida"</span>: <span style="color: #97365B; font-weight: bold;">20612439</span>, <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">do not forget the last comma, otherwise will compile error</span>
+    }
+    <span style="color: #3B6EA8;">if</span> <span style="color: #842879;">pop</span>, <span style="color: #842879;">ok</span> := statePopulations[<span style="color: #4F894C;">"Texas"</span>]; ok { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">check the ok value</span>
+        fmt.<span style="color: #29838D;">Println</span>(pop) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">pop is only accesible inside if block</span>
+    }
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">operator, &lt; &gt; == &lt;= &gt;= !=, no codes here, since it is easy</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">logical operator, || &amp;&amp; !</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">|| test will stop if any one of tests true: short circulting</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">&amp;&amp; test will stop if any one of tests false: short circulting</span>
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #3B6EA8; font-weight: bold;">!</span><span style="color: #97365B;">true</span>)
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">do not use == in float comparison, since go in handling floating points approximately</span>
+    <span style="color: #842879;">myNum</span> := <span style="color: #97365B; font-weight: bold;">0.123</span>
+    <span style="color: #3B6EA8;">if</span> myNum == math.<span style="color: #29838D;">Pow</span>(math.<span style="color: #29838D;">Sqrt</span>(myNum), <span style="color: #97365B; font-weight: bold;">2</span>) {
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"Same"</span>)
+    } <span style="color: #3B6EA8;">else</span> {
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"Different"</span>)
+    }
+
+     <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">Use Abs() &lt; 0.01 to check the result instead</span>
+    <span style="color: #3B6EA8;">if</span> math.<span style="color: #29838D;">Abs</span>(myNum / math.<span style="color: #29838D;">Pow</span>(math.<span style="color: #29838D;">Sqrt</span>(myNum), <span style="color: #97365B; font-weight: bold;">2</span>) - <span style="color: #97365B; font-weight: bold;">1</span>) &lt; <span style="color: #97365B; font-weight: bold;">0.001</span> {
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"Same"</span>)
+    } <span style="color: #3B6EA8;">else</span> {
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"Different"</span>)
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9910cdc" class="outline-3">
+<h3 id="org9910cdc"><span class="section-number-3">8.3.</span> Switch</h3>
+<div class="outline-text-3" id="text-8-3">
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #3B6EA8;">switch</span> <span style="color: #842879;">i</span>:=<span style="color: #97365B; font-weight: bold;">2</span>+<span style="color: #97365B; font-weight: bold;">3</span>;i { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">i is the tag of switch</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">switch 2 { // 2 is the tag of switch</span>
+        <span style="color: #3B6EA8;">case</span> <span style="color: #97365B; font-weight: bold;">1</span>:
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"one"</span>)
+        <span style="color: #3B6EA8;">case</span> <span style="color: #97365B; font-weight: bold;">2</span>:
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"two"</span>)
+        <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">case 5: // duplicate 5 is not allowed</span>
+        <span style="color: #8b94a5;">//  </span><span style="color: #8b94a5;">fmt.Println("five")</span>
+        <span style="color: #3B6EA8;">case</span> <span style="color: #97365B; font-weight: bold;">3</span>, <span style="color: #97365B; font-weight: bold;">4</span>, <span style="color: #97365B; font-weight: bold;">5</span>: <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">multiple test in one case</span>
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"three, four, five"</span>)
+        <span style="color: #3B6EA8;">default</span>:
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"other"</span>)
+    }
+}
+</pre>
+</div>
+
+<p>
+tag-less switch, very similar with if
+</p>
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #842879;">i</span> := <span style="color: #97365B; font-weight: bold;">10</span>
+    <span style="color: #3B6EA8;">switch</span> { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">notice here, no tag</span>
+        <span style="color: #3B6EA8;">case</span> i &lt;= <span style="color: #97365B; font-weight: bold;">10</span>:
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"&lt;= 10"</span>)
+        <span style="color: #3B6EA8;">fallthrough</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">need to specific fallthrough!</span>
+        <span style="color: #3B6EA8;">case</span> i &lt;= <span style="color: #97365B; font-weight: bold;">20</span>:
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"&lt;= 20"</span>) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">break is implied!</span>
+        <span style="color: #3B6EA8;">default</span>:
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"&gt; 20"</span>)
+    }
+
+}
+
+</pre>
+</div>
+
+<p>
+type switching with interface (a little similar with trait object but can check type directly)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+<span style="color: #3B6EA8;">import</span> (<span style="color: #4F894C;">"fmt"</span>)
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">i</span> <span style="color: #3B6EA8;">interface</span> {} = [<span style="color: #97365B; font-weight: bold;">3</span>]<span style="color: #9A7500;">int</span>{} <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">array with three elements</span>
+    <span style="color: #3B6EA8;">switch</span> i.(<span style="color: #3B6EA8;">type</span>) {
+        <span style="color: #3B6EA8;">case</span> <span style="color: #9A7500;">int</span>:
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"int"</span>)
+        <span style="color: #3B6EA8;">break</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">break early in the middle</span>
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"not print"</span>)
+        <span style="color: #3B6EA8;">case</span> <span style="color: #9A7500;">string</span>:
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"string"</span>)
+        <span style="color: #3B6EA8;">case</span> [<span style="color: #97365B; font-weight: bold;">2</span>]<span style="color: #9A7500;">int</span>:
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"array with 2 elements"</span>)
+        <span style="color: #3B6EA8;">case</span> [<span style="color: #97365B; font-weight: bold;">3</span>]<span style="color: #9A7500;">int</span>:
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"array with 3 elements"</span>)
+        <span style="color: #3B6EA8;">default</span>:
+            fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"other elements"</span>)
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org164d453" class="outline-3">
+<h3 id="org164d453"><span class="section-number-3">8.4.</span> Summary</h3>
+<div class="outline-text-3" id="text-8-4">
+
+<div id="org55a45ce" class="figure">
+<p><img src="golang/If_and_Switch_Statements/_20211018_163449screenshot.png" alt="_20211018_163449screenshot.png" />
+</p>
+</div>
+
+
+<div id="org98cf574" class="figure">
+<p><img src="golang/If_and_Switch_Statements/_20211018_163752screenshot.png" alt="_20211018_163752screenshot.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org33fd17e" class="outline-2">
+<h2 id="org33fd17e"><span class="section-number-2">9.</span> Looping</h2>
+<div class="outline-text-2" id="text-9">
+</div>
+<div id="outline-container-org293aaca" class="outline-3">
+<h3 id="org293aaca"><span class="section-number-3">9.1.</span> Agenda</h3>
+<div class="outline-text-3" id="text-9-1">
+
+<div id="org7a9e01a" class="figure">
+<p><img src="golang/Looping/_20211018_163826screenshot.png" alt="_20211018_163826screenshot.png" />
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgf21515c" class="outline-3">
+<h3 id="orgf21515c"><span class="section-number-3">9.2.</span> For loop</h3>
+<div class="outline-text-3" id="text-9-2">
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"for loop"</span>)
+    <span style="color: #3B6EA8;">for</span> <span style="color: #842879;">i</span> := <span style="color: #97365B; font-weight: bold;">0</span>; i &lt; <span style="color: #97365B; font-weight: bold;">5</span>; i = i + <span style="color: #97365B; font-weight: bold;">2</span> {
+        fmt.<span style="color: #29838D;">Println</span>(i)
+    }
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">go do not have comma expression, but can do comma assignment</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">go also can not use i++ in expression, but can use individually</span>
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"comman assignment"</span>)
+    <span style="color: #3B6EA8;">for</span> <span style="color: #842879;">i</span>, <span style="color: #842879;">j</span> := <span style="color: #97365B; font-weight: bold;">0</span>, <span style="color: #97365B; font-weight: bold;">0</span>; i &lt; <span style="color: #97365B; font-weight: bold;">5</span>; i, j = i+<span style="color: #97365B; font-weight: bold;">1</span>, j+<span style="color: #97365B; font-weight: bold;">1</span> {
+        fmt.<span style="color: #29838D;">Println</span>(i, j)
+    }
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">init the value outside the for loop, k is scope in main function</span>
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"init outside"</span>)
+    <span style="color: #842879;">k</span> := <span style="color: #97365B; font-weight: bold;">0</span>
+    <span style="color: #3B6EA8;">for</span> ; k &lt; <span style="color: #97365B; font-weight: bold;">5</span>; k++ {
+        fmt.<span style="color: #29838D;">Println</span>(k)
+    }
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">go way to do while loop</span>
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"go's while loop"</span>)
+    <span style="color: #842879;">l</span> := <span style="color: #97365B; font-weight: bold;">0</span>
+    <span style="color: #3B6EA8;">for</span> ; l &lt; <span style="color: #97365B; font-weight: bold;">5</span>; {
+        fmt.<span style="color: #29838D;">Println</span>(l)
+        l++
+    }
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">no need ; can also work</span>
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"go's while loop: no need ;"</span>)
+    <span style="color: #842879;">m</span> := <span style="color: #97365B; font-weight: bold;">0</span>
+    <span style="color: #3B6EA8;">for</span> m &lt; <span style="color: #97365B; font-weight: bold;">5</span> {
+        fmt.<span style="color: #29838D;">Println</span>(m)
+        m++
+    }
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">infinite loop</span>
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"break infinite loop"</span>)
+    <span style="color: #842879;">j</span> := <span style="color: #97365B; font-weight: bold;">0</span>
+    <span style="color: #3B6EA8;">for</span> {
+        j++
+        <span style="color: #3B6EA8;">if</span> j == <span style="color: #97365B; font-weight: bold;">5</span> {
+            <span style="color: #3B6EA8;">break</span>
+        }
+    }
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">use `continue` to check process further or not in loop, exit one iteration</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">break only break the closet loop it can find, we can use label `break Loop`</span>
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"Use `break label`"</span>)
+    <span style="color: #97365B;">Loop</span>:
+        <span style="color: #3B6EA8;">for</span> <span style="color: #842879;">i</span> := <span style="color: #97365B; font-weight: bold;">1</span>; i &lt;= <span style="color: #97365B; font-weight: bold;">3</span>; i++ {
+            <span style="color: #3B6EA8;">for</span> <span style="color: #842879;">j</span> := <span style="color: #97365B; font-weight: bold;">1</span>; j &lt;= <span style="color: #97365B; font-weight: bold;">3</span>; j++ {
+                fmt.<span style="color: #29838D;">Println</span>(i * j)
+                <span style="color: #3B6EA8;">if</span> i * j &gt;= <span style="color: #97365B; font-weight: bold;">3</span> {
+                    <span style="color: #3B6EA8;">break</span> <span style="color: #97365B;">Loop</span>
+                }
+
+            }
+        }
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">Loop collections: slice, array, map, string, channel</span>
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"Loop collections"</span>)
+    <span style="color: #842879;">s</span> := []<span style="color: #9A7500;">int</span>{<span style="color: #97365B; font-weight: bold;">1</span>,<span style="color: #97365B; font-weight: bold;">2</span>,<span style="color: #97365B; font-weight: bold;">3</span>}
+    <span style="color: #3B6EA8;">for</span> <span style="color: #842879;">k</span>, <span style="color: #842879;">v</span> := <span style="color: #3B6EA8;">range</span> s { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">k: index, v: value, s: coleection</span>
+        fmt.<span style="color: #29838D;">Println</span>(k, v)
+
+    }
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">for maps</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">for _, v := range s // only need value</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">for k := range s // only need key</span>
+}
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2c12e50" class="outline-3">
+<h3 id="org2c12e50"><span class="section-number-3">9.3.</span> Summary</h3>
+<div class="outline-text-3" id="text-9-3">
+
+<div id="org3785bad" class="figure">
+<p><img src="golang/Looping/_20211018_184152screenshot.png" alt="_20211018_184152screenshot.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org2d89514" class="outline-2">
+<h2 id="org2d89514"><span class="section-number-2">10.</span> Defer, Panic, and Recover</h2>
+<div class="outline-text-2" id="text-10">
+</div>
+<div id="outline-container-org2262db5" class="outline-3">
+<h3 id="org2262db5"><span class="section-number-3">10.1.</span> Defer</h3>
+<div class="outline-text-3" id="text-10-1">
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">LIFO</span>
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #3B6EA8;">defer</span> fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"start"</span>)
+    <span style="color: #3B6EA8;">defer</span> fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"middle"</span>) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">move after main function before main return</span>
+    <span style="color: #3B6EA8;">defer</span> fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"end"</span>)
+}
+
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+    <span style="color: #4F894C;">"io/ioutil"</span>
+    <span style="color: #4F894C;">"log"</span>
+    <span style="color: #4F894C;">"net/http"</span>
+)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #842879;">res</span>, <span style="color: #842879;">err</span> := http.<span style="color: #29838D;">Get</span>(<span style="color: #4F894C;">"http://www.google.com/robots.txt"</span>)
+    <span style="color: #3B6EA8;">if</span> err != <span style="color: #97365B;">nil</span> {
+        log.<span style="color: #29838D;">Fatal</span>(err)
+    }
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">open and close right next to each other, would not forget close</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">if in loop handling multiple resources, `defer` is not the best solution</span>
+    <span style="color: #3B6EA8;">defer</span> res.Body.<span style="color: #29838D;">Close</span>()
+    <span style="color: #842879;">robots</span>, <span style="color: #842879;">err</span> := ioutil.<span style="color: #29838D;">ReadAll</span>(res.Body)
+    <span style="color: #3B6EA8;">if</span> err != <span style="color: #97365B;">nil</span> {
+        log.<span style="color: #29838D;">Fatal</span>(err)
+    }
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%s"</span>, robots)
+
+}
+
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #842879;">a</span> := <span style="color: #4F894C;">"start"</span>
+    <span style="color: #3B6EA8;">defer</span> fmt.<span style="color: #29838D;">Println</span>(a) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">when defer take the original parameter</span>
+    a = <span style="color: #4F894C;">"end"</span>
+}
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgffa3f3a" class="outline-3">
+<h3 id="orgffa3f3a"><span class="section-number-3">10.2.</span> Panic</h3>
+<div class="outline-text-3" id="text-10-2">
+<p>
+Panic can not continue. For example, file does not exists. But we can recover from panic. It is
+better to return err.
+</p>
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"start"</span>)
+    <span style="color: #3B6EA8;">defer</span> fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"Defer first"</span>) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">defer is followed by panic</span>
+    <span style="color: #29838D;">panic</span>(<span style="color: #4F894C;">"panic happends after"</span>)
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"end"</span>)
+}
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbd9fe2f" class="outline-3">
+<h3 id="orgbd9fe2f"><span class="section-number-3">10.3.</span> Recover</h3>
+<div class="outline-text-3" id="text-10-3">
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+    <span style="color: #4F894C;">"log"</span>
+)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"Start"</span>)
+    <span style="color: #29838D;">panicker</span>()
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"End"</span>)
+}
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">panicker</span>() {
+    <span style="color: #3B6EA8;">defer</span> <span style="color: #3B6EA8;">func</span>() {
+        <span style="color: #3B6EA8;">if</span> <span style="color: #842879;">err</span> := <span style="color: #29838D;">recover</span>(); err != <span style="color: #97365B;">nil</span> {
+            log.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"Error:"</span>, err)
+            <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">panic(err) // if we found the panic can not be handled, repanic here</span>
+        }
+    }() <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">here we recover the panic</span>
+    <span style="color: #29838D;">panic</span>(<span style="color: #4F894C;">"something bad happened"</span>)
+    fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"panicker end"</span>)
+}
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org398cd81" class="outline-3">
+<h3 id="org398cd81"><span class="section-number-3">10.4.</span> Summary</h3>
+<div class="outline-text-3" id="text-10-4">
+
+<div id="orgc4ebee6" class="figure">
+<p><img src="golang/Defer,_Panic,_and_Recover/_20211019_102226screenshot.png" alt="_20211019_102226screenshot.png" />
+</p>
+</div>
+
+
+<div id="orgb7c3b60" class="figure">
+<p><img src="golang/Defer,_Panic,_and_Recover/_20211019_102240screenshot.png" alt="_20211019_102240screenshot.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org90f10e0" class="outline-2">
+<h2 id="org90f10e0"><span class="section-number-2">11.</span> Pointer</h2>
+<div class="outline-text-2" id="text-11">
+</div>
+<div id="outline-container-org8dd962e" class="outline-3">
+<h3 id="org8dd962e"><span class="section-number-3">11.1.</span> Agenda</h3>
+<div class="outline-text-3" id="text-11-1">
+
+<div id="org225dbd4" class="figure">
+<p><img src="golang/Pointer/_20211019_102326screenshot.png" alt="_20211019_102326screenshot.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">a</span> <span style="color: #9A7500;">int</span> = <span style="color: #97365B; font-weight: bold;">42</span>
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">b</span> *<span style="color: #9A7500;">int</span> = &amp;a <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">put * before the type, pointer, b holds the memory location of a </span>
+    fmt.<span style="color: #29838D;">Println</span>(&amp;a, b, *b) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">put * before the variable, dereference</span>
+    *b = <span style="color: #97365B; font-weight: bold;">14</span> <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">change the value points to</span>
+    fmt.<span style="color: #29838D;">Println</span>(&amp;a, b, *b)
+}
+
+</pre>
+</div>
+
+<p>
+Unlike C/C++, Go does not allow pointer arithmetic, use unsafe instead
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">ms</span> <span style="color: #9A7500;">myStruct</span>
+    ms = <span style="color: #9A7500;">myStruct</span>{<span style="color: #97365B;">foo</span>:<span style="color: #97365B; font-weight: bold;">42</span>}
+    fmt.<span style="color: #29838D;">Println</span>(ms)
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">almost same behavior expect the print out has a preceding &amp;</span>
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">ms1</span> *<span style="color: #9A7500;">myStruct</span>
+    ms1 = &amp;<span style="color: #9A7500;">myStruct</span>{<span style="color: #97365B;">foo</span>:<span style="color: #97365B; font-weight: bold;">42</span>}
+    fmt.<span style="color: #29838D;">Println</span>(ms1)
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">init with new</span>
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">ms2</span> *<span style="color: #9A7500;">myStruct</span>
+    fmt.<span style="color: #29838D;">Println</span>(ms2) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">nil pointer</span>
+    ms2 = <span style="color: #29838D;">new</span>(<span style="color: #9A7500;">myStruct</span>)
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">dereference ms2, sugar!</span>
+    ms2.foo = <span style="color: #97365B; font-weight: bold;">42</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">dereference ms2</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">(*ms2).foo = 42</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">dereference ms2.foo</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">*ms.foo = 42</span>
+    fmt.<span style="color: #29838D;">Println</span>(ms2)
+}
+
+<span style="color: #3B6EA8;">type</span> <span style="color: #9A7500;">myStruct</span> <span style="color: #3B6EA8;">struct</span> {
+    foo <span style="color: #9A7500;">int</span>
+}
+
+</pre>
+</div>
+
+<p>
+Keep in mind all the time: slice and map use pointer when assign value
+</p>
+</div>
+</div>
+
+<div id="outline-container-org765dc6f" class="outline-3">
+<h3 id="org765dc6f"><span class="section-number-3">11.2.</span> Summary</h3>
+<div class="outline-text-3" id="text-11-2">
+
+<div id="org52a594c" class="figure">
+<p><img src="golang/Pointer/_20211019_105530screenshot.png" alt="_20211019_105530screenshot.png" />
+</p>
+</div>
+
+
+
+<div id="org23d1984" class="figure">
+<p><img src="golang/Pointer/_20211019_105631screenshot.png" alt="_20211019_105631screenshot.png" />
+</p>
+</div>
+
+
+<div id="orgaef81c9" class="figure">
+<p><img src="golang/Pointer/_20211019_105718screenshot.png" alt="_20211019_105718screenshot.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2e7bbdc" class="outline-2">
+<h2 id="org2e7bbdc"><span class="section-number-2">12.</span> Functions</h2>
+<div class="outline-text-2" id="text-12">
+</div>
+<div id="outline-container-org1f48fa4" class="outline-3">
+<h3 id="org1f48fa4"><span class="section-number-3">12.1.</span> Agenda</h3>
+<div class="outline-text-3" id="text-12-1">
+
+<div id="org0efbfa6" class="figure">
+<p><img src="golang/Functions/_20211019_114742screenshot.png" alt="_20211019_114742screenshot.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga6199ba" class="outline-3">
+<h3 id="orga6199ba"><span class="section-number-3">12.2.</span> Functions</h3>
+<div class="outline-text-3" id="text-12-2">
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">entry point</span>
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">`func` keyword, open bracket should be in same line of func</span>
+    <span style="color: #842879;">greeting</span> := <span style="color: #4F894C;">"Hello"</span>
+    <span style="color: #842879;">name</span> := <span style="color: #4F894C;">"Damon"</span>
+    <span style="color: #29838D;">sayMessageMultipleParameters</span>(greeting, name)
+    <span style="color: #29838D;">sayMessageMultipleParameters</span>(greeting, name)
+    <span style="color: #29838D;">sayMessagePassInPointers</span>(&amp;greeting, &amp;name)
+    <span style="color: #29838D;">sum</span>(<span style="color: #4F894C;">"The sum is"</span>, <span style="color: #97365B; font-weight: bold;">1</span>, <span style="color: #97365B; font-weight: bold;">2</span>, <span style="color: #97365B; font-weight: bold;">3</span>, <span style="color: #97365B; font-weight: bold;">4</span>, <span style="color: #97365B; font-weight: bold;">5</span>)
+    <span style="color: #842879;">d</span>, <span style="color: #842879;">err</span> := <span style="color: #29838D;">divide</span>(<span style="color: #97365B; font-weight: bold;">5.0</span>, <span style="color: #97365B; font-weight: bold;">3.0</span>) <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">use comma delimited variables to accept multi-return function</span>
+    <span style="color: #3B6EA8;">if</span> err != <span style="color: #97365B;">nil</span> {
+        fmt.<span style="color: #29838D;">Println</span>(err)
+        <span style="color: #3B6EA8;">return</span>
+    } <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">notice NO ELSE here, since if no error, will passthrough</span>
+    fmt.<span style="color: #29838D;">Println</span>(d)
+
+    <span style="color: #3B6EA8;">func</span>() {fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"Hello Go!"</span>)}() <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">new scope, need call anoymous function</span>
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">use variable outside of anoymous function</span>
+    <span style="color: #3B6EA8;">for</span> <span style="color: #842879;">i</span> :=<span style="color: #97365B; font-weight: bold;">0</span>; i &lt; <span style="color: #97365B; font-weight: bold;">5</span>; i++ {
+        <span style="color: #3B6EA8;">func</span>(<span style="color: #842879;">i</span> <span style="color: #9A7500;">int</span>) {
+            fmt.<span style="color: #29838D;">Println</span>(i)
+        }(i)
+    }
+
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">save function and call it later</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">var f func(float64, float64)  (float64, error)</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">var f func() = func() {}</span>
+    <span style="color: #842879;">f</span> := <span style="color: #3B6EA8;">func</span>() {
+        fmt.<span style="color: #29838D;">Println</span>(<span style="color: #4F894C;">"Hello Go, later"</span>)
+    }
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">need to define before using!</span>
+    <span style="color: #29838D;">f</span>()
+
+} <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">closing bracket one line</span>
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">sayMessage</span>(<span style="color: #842879;">msg</span> <span style="color: #9A7500;">string</span>) { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">para in ()</span>
+}
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">sayMessageMultipleParameters</span>(<span style="color: #842879;">greeting</span> <span style="color: #9A7500;">string</span>, <span style="color: #842879;">name</span> <span style="color: #9A7500;">string</span>) { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">multi para in ()</span>
+}
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">sayMessageCommaDelimited</span>(<span style="color: #842879;">greeting</span>, <span style="color: #842879;">name</span> <span style="color: #9A7500;">string</span>) { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">all are string</span>
+}
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">sayMessagePassInPointers</span>(<span style="color: #842879;">greeting</span>, <span style="color: #842879;">name</span> *<span style="color: #9A7500;">string</span>) { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">pass in pointers, more efficient</span>
+}
+
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">be care of: maps and slices are passing with points</span>
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">sum</span>(<span style="color: #842879;">msg</span> <span style="color: #9A7500;">string</span>, <span style="color: #842879;">values</span> ...<span style="color: #9A7500;">int</span>) { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">collect all other int parameters into `values` slice; `values` must be at the end of the parameter list; it is also possible only has `values`</span>
+    fmt.<span style="color: #29838D;">Println</span>(values)
+    <span style="color: #842879;">result</span> := <span style="color: #97365B; font-weight: bold;">0</span>
+    <span style="color: #3B6EA8;">for</span> <span style="color: #842879;">_</span>, <span style="color: #842879;">v</span>:= <span style="color: #3B6EA8;">range</span> values {
+        result += v
+    }
+    fmt.<span style="color: #29838D;">Println</span>(msg, result)
+
+}
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">sumHasReturnValue</span>(<span style="color: #842879;">values</span> ...<span style="color: #9A7500;">int</span>) <span style="color: #9A7500;">int</span> { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">return int</span>
+    fmt.<span style="color: #29838D;">Println</span>(values)
+    <span style="color: #842879;">result</span> := <span style="color: #97365B; font-weight: bold;">0</span>
+    <span style="color: #3B6EA8;">for</span> <span style="color: #842879;">_</span>, <span style="color: #842879;">v</span>:= <span style="color: #3B6EA8;">range</span> values {
+        result += v
+    }
+    fmt.<span style="color: #29838D;">Println</span>(result)
+    <span style="color: #3B6EA8;">return</span> result
+}
+
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">wired operation, return pointer, it is permitted in go, since go will assign the heap for local variable</span>
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">sumHasReturnInternalPointer</span>(<span style="color: #842879;">values</span> ...<span style="color: #9A7500;">int</span>) *<span style="color: #9A7500;">int</span> { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">return int pointer</span>
+    fmt.<span style="color: #29838D;">Println</span>(values)
+    <span style="color: #842879;">result</span> := <span style="color: #97365B; font-weight: bold;">0</span>
+    <span style="color: #3B6EA8;">for</span> <span style="color: #842879;">_</span>, <span style="color: #842879;">v</span>:= <span style="color: #3B6EA8;">range</span> values {
+        result += v
+    }
+    fmt.<span style="color: #29838D;">Println</span>(result)
+    <span style="color: #3B6EA8;">return</span> &amp;result
+}
+
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">return name variable in function signature, we do not need to init the variable and just simplily `return`. But long function maybe more confusing.</span>
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">sumHasNameReturn</span>(<span style="color: #842879;">values</span> ...<span style="color: #9A7500;">int</span>) (<span style="color: #842879;">result</span> <span style="color: #9A7500;">int</span> ) { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">return name int</span>
+    fmt.<span style="color: #29838D;">Println</span>(values)
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">result := 0 // no need</span>
+    <span style="color: #3B6EA8;">for</span> <span style="color: #842879;">_</span>, <span style="color: #842879;">v</span>:= <span style="color: #3B6EA8;">range</span> values {
+        result += v
+    }
+    fmt.<span style="color: #29838D;">Println</span>(result)
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">return &amp;result // no need</span>
+    <span style="color: #3B6EA8;">return</span>
+}
+
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">return multiple values</span>
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">divide</span>(<span style="color: #842879;">a</span>, <span style="color: #842879;">b</span> <span style="color: #9A7500;">float64</span>) (<span style="color: #9A7500;">float64</span>, <span style="color: #9A7500;">error</span>) { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">idiomatic go, return multiple values</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">do not do else check, instead, do error check at beginning, and return it asap</span>
+    <span style="color: #3B6EA8;">if</span> b == <span style="color: #97365B; font-weight: bold;">0.0</span> {
+        <span style="color: #3B6EA8;">return</span> <span style="color: #97365B; font-weight: bold;">0.0</span>, fmt.<span style="color: #29838D;">Errorf</span>(<span style="color: #4F894C;">"Cannot divide by zero"</span>)
+    }
+    <span style="color: #3B6EA8;">return</span> a / b, <span style="color: #97365B;">nil</span>
+}
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org436c710" class="outline-3">
+<h3 id="org436c710"><span class="section-number-3">12.3.</span> Method</h3>
+<div class="outline-text-3" id="text-12-3">
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #842879;">g</span> := greeter {
+        <span style="color: #97365B;">greeting</span>: <span style="color: #4F894C;">"hello"</span>,
+        <span style="color: #97365B;">name</span>: <span style="color: #4F894C;">"Go"</span>,
+    }
+    g.<span style="color: #29838D;">greet</span>()
+
+}
+
+<span style="color: #3B6EA8;">type</span> <span style="color: #9A7500;">greeter</span> <span style="color: #3B6EA8;">struct</span> {
+    greeting <span style="color: #9A7500;">string</span>
+    name <span style="color: #9A7500;">string</span>
+}
+
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">name: g in the context of this method, value type: greeter</span>
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">accept one parameter, g, actually, it is this in other languages or self in rust</span>
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">Value Receiver</span>
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">just like rust's self</span>
+<span style="color: #3B6EA8;">func</span> (<span style="color: #842879;">g</span> <span style="color: #9A7500;">greeter</span>) <span style="color: #29838D;">greet</span>() {
+    fmt.<span style="color: #29838D;">Println</span>(g.greeting, g.name)
+
+}
+
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">Pointer Receiver: assign pointer is also ok</span>
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">just like rust's &amp;self</span>
+<span style="color: #3B6EA8;">func</span> (<span style="color: #842879;">g</span> *<span style="color: #9A7500;">greeter</span>) <span style="color: #29838D;">greetPointer</span>() { <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">name: g in the context of this method, value type: greeter</span>
+    fmt.<span style="color: #29838D;">Println</span>(g.greeting, g.name)
+
+}
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0aaa82e" class="outline-3">
+<h3 id="org0aaa82e"><span class="section-number-3">12.4.</span> Summary</h3>
+<div class="outline-text-3" id="text-12-4">
+
+<div id="orga72c779" class="figure">
+<p><img src="golang/Functions/_20211019_164233screenshot.png" alt="_20211019_164233screenshot.png" />
+</p>
+</div>
+
+
+<div id="org94034ef" class="figure">
+<p><img src="golang/Functions/_20211019_164417screenshot.png" alt="_20211019_164417screenshot.png" />
+</p>
+</div>
+
+
+<div id="org7ab9238" class="figure">
+<p><img src="golang/Functions/_20211019_164439screenshot.png" alt="_20211019_164439screenshot.png" />
+</p>
+</div>
+
+
+<div id="org4ea0be8" class="figure">
+<p><img src="golang/Functions/_20211019_164654screenshot.png" alt="_20211019_164654screenshot.png" />
+</p>
+</div>
+
+
+<div id="orga5a238e" class="figure">
+<p><img src="golang/Functions/_20211019_164642screenshot.png" alt="_20211019_164642screenshot.png" />
+</p>
+</div>
+
+
+<div id="org10013af" class="figure">
+<p><img src="golang/Functions/_20211019_164905screenshot.png" alt="_20211019_164905screenshot.png" />
+</p>
+</div>
+
+
+<div id="orga8ae8e9" class="figure">
+<p><img src="golang/Functions/_20211019_165026screenshot.png" alt="_20211019_165026screenshot.png" />
+</p>
+</div>
+
+<p>
+Function is a type.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1d5fa2d" class="outline-2">
+<h2 id="org1d5fa2d"><span class="section-number-2">13.</span> Interfaces</h2>
+<div class="outline-text-2" id="text-13">
+<p>
+The main features make go maintable
+</p>
+</div>
+
+<div id="outline-container-org275d872" class="outline-3">
+<h3 id="org275d872"><span class="section-number-3">13.1.</span> Agenda</h3>
+<div class="outline-text-3" id="text-13-1">
+
+<div id="org3827421" class="figure">
+<p><img src="golang/Interfaces/_20211019_165612screenshot.png" alt="_20211019_165612screenshot.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">w</span> <span style="color: #9A7500;">Writer</span> = <span style="color: #9A7500;">ConsoleWrite</span>{}
+    w.<span style="color: #29838D;">Write</span>([]<span style="color: #29838D;">byte</span>(<span style="color: #4F894C;">"hello Go"</span>))
+}
+
+
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">just like defining struct</span>
+<span style="color: #3B6EA8;">type</span> <span style="color: #9A7500;">Writer</span> <span style="color: #3B6EA8;">interface</span> {
+    <span style="color: #29838D;">Write</span>([]<span style="color: #9A7500;">byte</span>) (<span style="color: #9A7500;">int</span>, <span style="color: #9A7500;">error</span>)
+
+}
+
+<span style="color: #3B6EA8;">type</span> <span style="color: #9A7500;">ConsoleWrite</span> <span style="color: #3B6EA8;">struct</span> {}
+
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">implict implementation, no impl keyword</span>
+
+<span style="color: #3B6EA8;">func</span> (<span style="color: #842879;">cw</span> <span style="color: #9A7500;">ConsoleWrite</span>) <span style="color: #29838D;">Write</span>(<span style="color: #842879;">data</span> []<span style="color: #9A7500;">byte</span>) (<span style="color: #9A7500;">int</span>, <span style="color: #9A7500;">error</span>) {
+    <span style="color: #842879;">n</span>, <span style="color: #842879;">err</span> := fmt.<span style="color: #29838D;">Println</span>(<span style="color: #29838D;">string</span>(data))
+    <span style="color: #3B6EA8;">return</span> n, err
+}
+
+</pre>
+</div>
+
+<p>
+interface is a type, data container
+interface can be created later, not just on design time
+naming convension:
+    Single method interface -&gt; Name the interface with method name + er
+</p>
+
+
+<p>
+Implement interface for int
+</p>
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #842879;">myInt</span> := <span style="color: #29838D;">IntCounter</span>(<span style="color: #97365B; font-weight: bold;">0</span>)
+     <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">this is different than rust, rust use the trait to call the trait function, go use var to define an interface</span>
+    <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">we can not add method to int, just like rust, we can implement interface for external type</span>
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">inc</span> <span style="color: #9A7500;">Incrementer</span> = &amp;myInt
+    <span style="color: #3B6EA8;">for</span> <span style="color: #842879;">i</span> := <span style="color: #97365B; font-weight: bold;">0</span>; i &lt; <span style="color: #97365B; font-weight: bold;">10</span>; i++ {
+        fmt.<span style="color: #29838D;">Println</span>(inc.<span style="color: #29838D;">Increment</span>())
+    }
+}
+
+<span style="color: #3B6EA8;">type</span> <span style="color: #9A7500;">Incrementer</span> <span style="color: #3B6EA8;">interface</span> {
+    <span style="color: #29838D;">Increment</span>() <span style="color: #9A7500;">int</span>
+}
+
+<span style="color: #3B6EA8;">type</span> <span style="color: #9A7500;">IntCounter</span> <span style="color: #9A7500;">int</span>
+
+<span style="color: #3B6EA8;">func</span> (<span style="color: #842879;">ic</span> *<span style="color: #9A7500;">IntCounter</span>) <span style="color: #29838D;">Increment</span>() <span style="color: #9A7500;">int</span> {
+    *ic++
+    <span style="color: #3B6EA8;">return</span> <span style="color: #29838D;">int</span>(*ic)
+}
+
+</pre>
+</div>
+
+<p>
+Embed interfaces into another interface
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+    <span style="color: #4F894C;">"bytes"</span>
+)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">wc</span> <span style="color: #9A7500;">WriterCloser</span> = <span style="color: #29838D;">NewBufferedWriterCloser</span>()
+    wc.<span style="color: #29838D;">Write</span>([]<span style="color: #29838D;">byte</span>(<span style="color: #4F894C;">"Hello YouTube listeners, this is a test"</span>))
+    wc.<span style="color: #29838D;">Close</span>()
+}
+
+
+<span style="color: #3B6EA8;">type</span> <span style="color: #9A7500;">Writer</span> <span style="color: #3B6EA8;">interface</span> {
+    <span style="color: #29838D;">Write</span>([]<span style="color: #9A7500;">byte</span>) (<span style="color: #9A7500;">int</span>, <span style="color: #9A7500;">error</span>)
+}
+
+<span style="color: #3B6EA8;">type</span> <span style="color: #9A7500;">Closer</span> <span style="color: #3B6EA8;">interface</span> {
+    <span style="color: #29838D;">Close</span>() <span style="color: #9A7500;">error</span>
+}
+
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">embedded interfaces into another interfaces</span>
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">if you impl all the methods - Writer's Write and Closer's Close, you impl WriterCloser as well</span>
+<span style="color: #3B6EA8;">type</span> <span style="color: #9A7500;">WriterCloser</span> <span style="color: #3B6EA8;">interface</span> {
+    Writer
+    Closer
+}
+
+<span style="color: #3B6EA8;">type</span> <span style="color: #9A7500;">BufferedWriterCloser</span> <span style="color: #3B6EA8;">struct</span> {
+    buffer *<span style="color: #9A7500;">bytes.Buffer</span>
+}
+
+<span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">impl BufferredWriterCloser with Write method</span>
+<span style="color: #3B6EA8;">func</span> (<span style="color: #842879;">bwc</span> *<span style="color: #9A7500;">BufferedWriterCloser</span>) <span style="color: #29838D;">Write</span>(<span style="color: #842879;">data</span> []<span style="color: #9A7500;">byte</span>) (<span style="color: #9A7500;">int</span>, <span style="color: #9A7500;">error</span>) {
+    <span style="color: #842879;">n</span>, <span style="color: #842879;">err</span> := bwc.buffer.<span style="color: #29838D;">Write</span>(data)
+    <span style="color: #3B6EA8;">if</span> err != <span style="color: #97365B;">nil</span> {
+        <span style="color: #3B6EA8;">return</span> <span style="color: #97365B; font-weight: bold;">0</span>, err
+    }
+
+    <span style="color: #842879;">v</span> := <span style="color: #29838D;">make</span>([]<span style="color: #9A7500;">byte</span>, <span style="color: #97365B; font-weight: bold;">8</span>)
+    <span style="color: #3B6EA8;">for</span> bwc.buffer.<span style="color: #29838D;">Len</span>() &gt; <span style="color: #97365B; font-weight: bold;">8</span> {
+        <span style="color: #842879;">_</span>, <span style="color: #842879;">err</span> := bwc.buffer.<span style="color: #29838D;">Read</span>(v)
+        <span style="color: #3B6EA8;">if</span> err != <span style="color: #97365B;">nil</span> {
+            <span style="color: #3B6EA8;">return</span> <span style="color: #97365B; font-weight: bold;">0</span>, err
+        }
+        _, err = fmt.<span style="color: #29838D;">Println</span>(<span style="color: #29838D;">string</span>(v))
+        <span style="color: #3B6EA8;">if</span> err != <span style="color: #97365B;">nil</span> {
+            <span style="color: #3B6EA8;">return</span> <span style="color: #97365B; font-weight: bold;">0</span>, err
+        }
+    }
+    <span style="color: #3B6EA8;">return</span> n, err
+
+}
+
+<span style="color: #3B6EA8;">func</span> (<span style="color: #842879;">bwc</span> *<span style="color: #9A7500;">BufferedWriterCloser</span>) <span style="color: #29838D;">Close</span>() <span style="color: #9A7500;">error</span> {
+    <span style="color: #3B6EA8;">for</span> bwc.buffer.<span style="color: #29838D;">Len</span>() &gt; <span style="color: #97365B; font-weight: bold;">0</span> {
+        <span style="color: #842879;">data</span> := bwc.buffer.<span style="color: #29838D;">Next</span>(<span style="color: #97365B; font-weight: bold;">8</span>)
+        <span style="color: #842879;">_</span>, <span style="color: #842879;">err</span> := fmt.<span style="color: #29838D;">Println</span>(<span style="color: #29838D;">string</span>(data))
+        <span style="color: #3B6EA8;">if</span> err != <span style="color: #97365B;">nil</span> {
+            <span style="color: #3B6EA8;">return</span> err
+        }
+    }
+    <span style="color: #3B6EA8;">return</span> <span style="color: #97365B;">nil</span>
+
+}
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">NewBufferedWriterCloser</span>() *<span style="color: #9A7500;">BufferedWriterCloser</span> {
+    <span style="color: #3B6EA8;">return</span> &amp;BufferedWriterCloser {
+        <span style="color: #97365B;">buffer</span>: bytes.<span style="color: #29838D;">NewBuffer</span>([]<span style="color: #9A7500;">byte</span>{}),
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org8bd22de" class="outline-2">
+<h2 id="org8bd22de"><span class="section-number-2">14.</span> Best pratices</h2>
+<div class="outline-text-2" id="text-14">
+<ul class="org-ul">
+<li>length -&gt; life, but keep as short as possible</li>
+<li>acronym: all uppercase URL rather than than Url</li>
+<li>Pascal or camelCase</li>
+</ul>
+
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #3B6EA8;">package</span> main <span style="color: #8b94a5;">// </span><span style="color: #8b94a5;">every go has package</span>
+
+<span style="color: #3B6EA8;">import</span> (
+    <span style="color: #4F894C;">"fmt"</span>
+)
+
+<span style="color: #3B6EA8;">func</span> <span style="color: #29838D;">main</span>() {
+    <span style="color: #3B6EA8;">var</span> <span style="color: #842879;">n</span> <span style="color: #9A7500;">bool</span> = <span style="color: #97365B;">true</span>
+    fmt.<span style="color: #29838D;">Printf</span>(<span style="color: #4F894C;">"%v, %T\n"</span>, n, n)
+}
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6fc9d4c" class="outline-2">
+<h2 id="org6fc9d4c"><span class="section-number-2">15.</span> References</h2>
+<div class="outline-text-2" id="text-15">
+<ul class="org-ul">
+<li><a href="https://www.youtube.com/watch?v=YS4e4q9oBaU">https://www.youtube.com/watch?v=YS4e4q9oBaU</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Damon Chen</p>
+<p class="date">Created: 2021-10-20 Wed 09:46</p>
+</div>
+</body>
+</html>
