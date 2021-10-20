@@ -21,9 +21,9 @@ the notes. Some notes are embedded in the comments.
 - Command Documentation ¶
 - https://pkg.go.dev/std
 - https://forum.golangbridge.org/
-sh- https://blog.gopheracademy.com/gophers-slack-community/
-sh- https://play.golang.org/
-sh
+- https://blog.gopheracademy.com/gophers-slack-community/
+- https://play.golang.org/
+
 #+begin_src go :exports both
 package main // every go has package
 
@@ -207,33 +207,33 @@ func main() {
 : true, bool
 : false, bool
 
-Every value when init Default it is 0 or false
-Default is int
-we have int8, int16, int32, int64, uint8, uint16, uint32, no uint64
+- Every value when init Default it is 0 or false
+- Default is int
+- we have int8, int16, int32, int64, uint8, uint16, uint32, no uint64
 
-+
--
-*
-10 / 3 = 3  drop reminder
-10 % 3 = 1  reminder
+- +
+- -
+- *
+- 10 / 3 = 3  drop reminder
+- 10 % 3 = 1  reminder
 
-int can not add int8, need use init() convert first
+- int can not add int8, need use init() convert first
 
-&, |, ^, &^ (how ^ and &^ work?)
+- &, |, ^, &^ (how ^ and &^ work?)
 
-<<
->>
+- <<
+- >>
 
-float32, float64 => only + - * /
+- float32, float64 => only + - * /
 
-complex64, complex128 => real() and imag() funxtion, return float32 or float64
+- complex64, complex128 => real() and imag() funxtion, return float32 or float64
 
-string type (UTF8)
+- string type (UTF8)
  - index with s[2] just like array, return as a uint8
  - cannot manipulate the char using s[2] = "u"
  - []byte(s): string to byte slices
 
-rune
+- rune
  - read api: ReadRune
  - utf32 
  - Actually is int32 allias
