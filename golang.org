@@ -1617,6 +1617,8 @@ The main features make go maintable
 #+attr_org: :width 600px
 [[file:golang/Interfaces/_20211019_165612screenshot.png]]
 
+** Implement interface for struct
+
 #+begin_src go :exports both
 package main
 
@@ -1656,7 +1658,7 @@ naming convension:
     Single method interface -> Name the interface with method name + er
 
 
-Implement interface for int
+** Implement interface for int
 #+begin_src go :exports both
 package main
 
@@ -1687,7 +1689,7 @@ func (ic *IntCounter) Increment() int {
 
 #+end_src
 
-Embed interfaces into another interface
+** Embed interfaces into another interface; convert interface to something else
 
 #+begin_src go :exports both
 package main
@@ -1695,12 +1697,32 @@ package main
 import (
 	"fmt"
 	"bytes"
+	"io"
 )
 
 func main() {
 	var wc WriterCloser = NewBufferedWriterCloser()
 	wc.Write([]byte("Hello YouTube listeners, this is a test"))
 	wc.Close()
+	
+	bwc := wc.(*BufferedWriterCloser) // type conversion succeeds
+	fmt.Println(bwc)
+	
+	// bwc := wc.(*io.Reader) // type conversion failed, panic with io.Reader: missing method Read
+
+	// But we can use ok to handle the conversion error
+	r, ok := wc.(io.Reader)
+	if ok {
+		fmt.Println(r)
+		
+	} else {
+		fmt.Println("Conversion failed")
+		
+	}
+	
+	
+	// bwc := wc.(BufferedWriterCloser) // type conversion failed, since we impl the interface with pointer, not value; BufferedWriterCloser does not implement WriterCloser
+
 }
 
 
@@ -1770,6 +1792,205 @@ func NewBufferedWriterCloser() *BufferedWriterCloser {
 : steners,
 :  this is
 :  a test
+: &{0xc000098180}
+: Conversion failed
+
+** Empty interface
+- Empty interface is an interface has no methods on it.
+- Any type in go implements empty interface (Any types can be cast to empty interface, even integer?)
+- Empty interface is useful either type conversion or using reflect package in order to figure
+  out what kind of an ojbect you're dealing with
+
+#+begin_src go :exports both
+package main
+
+import (
+	"fmt"
+	"bytes"
+	"io"
+)
+
+func main() {
+	var myObj interface{} = NewBufferedWriterCloser() // define an empty interface
+	if wc, ok := myObj.(WriterCloser); ok {
+		wc.Write([]byte("Hello empty interface"))
+		wc.Close()
+	}
+	r, ok := myObj.(io.Reader)
+	if ok {
+		fmt.Println(r)
+		
+	} else {
+		fmt.Println("Conversion failed")
+		
+	}
+}
+
+
+type Writer interface {
+	Write([]byte) (int, error)
+}
+
+type Closer interface {
+	Close() error
+}
+
+// embedded interfaces into another interfaces
+// if you impl all the methods - Writer's Write and Closer's Close, you impl WriterCloser as well
+type WriterCloser interface {
+	Writer
+	Closer
+}
+
+type BufferedWriterCloser struct {
+	buffer *bytes.Buffer
+}
+
+// impl BufferredWriterCloser with Write method
+func (bwc *BufferedWriterCloser) Write(data []byte) (int, error) {
+	n, err := bwc.buffer.Write(data)
+	if err != nil {
+		return 0, err
+	}
+	
+	v := make([]byte, 8)
+	for bwc.buffer.Len() > 8 {
+		_, err := bwc.buffer.Read(v)
+		if err != nil {
+			return 0, err
+		}
+		_, err = fmt.Println(string(v))
+		if err != nil {
+			return 0, err
+		}
+	}
+	return n, err
+	
+}
+
+func (bwc *BufferedWriterCloser) Close() error {
+	for bwc.buffer.Len() > 0 {
+		data := bwc.buffer.Next(8)
+		_, err := fmt.Println(string(data))
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+
+}
+
+func NewBufferedWriterCloser() *BufferedWriterCloser {
+	return &BufferedWriterCloser {
+		buffer: bytes.NewBuffer([]byte{}),
+	}
+}
+#+end_src
+
+#+RESULTS:
+: Hello em
+: pty inte
+: rface
+: Conversion failed
+
+Type switch
+#+begin_src go :exports output
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	var i interface{} = 0
+	switch i.(type) {
+		case int:
+		fmt.Println("int")
+		case string:
+		fmt.Println("string")
+		default:
+		fmt.Println("default")
+	}
+}
+
+#+end_src
+
+#+RESULTS:
+: int
+
+- Value receiver & pointer receiver
+- Whe we define types, and we assign methods to them, each one of those types has what's called
+  a method set
+- Method sets for a value type. If we implement the interface with a concrete value, e.g. ~var wc WriterCloser =
+  myWriterCloser{}~, ~wc~ holds a *value* ~myWriterCloser~, the method sets of ~wc~ are any methods that
+  has a value as the receiver (*all methods that have value receivers*). Thats why if ~myWriterCloser~ no longer has a value receiver will
+  generate compilation error.
+- Method sets for a pointre type.  But if we implement the interface with pointer, the methods sets of this pointer are all of value
+  receiver methods and all of the pointer receiver methods (*regardless of the receiver types*).
+- In other words, if any of the methods require a pointer receiver, you have to implement that
+  interface with a pointer. if any of the methods require a value receiver, you can implement
+  it with a value or pointer.
+
+#+begin_src go
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	var wc WriterCloser = &myWriterCloser{}
+	fmt.Println(wc)
+}
+
+type Writer interface {
+	Write([]byte) (int, error)
+}
+type Closer interface {
+	Close() error
+}
+type WriterCloser interface {
+	Writer
+	Closer
+}
+type myWriterCloser struct {}
+
+func (mwc myWriterCloser) Write(data []byte) (int, error) {
+	return 0, nil
+}
+
+// Compliation error if `var wc WriterCloser = myWriterCloser{}` in main()
+// Compliation pass if `var wc WriterCloser = &myWriterCloser{}` in main()
+// func (mwc *myWriterCloser) Write(data []byte) (int, error) {
+// 	return 0, nil
+// }
+
+func (mwc myWriterCloser) Close() error {
+	return nil
+}
+
+#+end_src
+
+#+RESULTS:
+: &{}
+
+** Summary
+
+#+attr_org: :width 600px
+[[file:~/OneDrive/Org/crypto.com/golang/golang/Interfaces/_20211020_120227screenshot.png]]
+
+#+attr_org: :width 600px
+[[file:~/OneDrive/Org/crypto.com/golang/golang/Interfaces/_20211020_120253screenshot.png]]
+
+#+attr_org: :width 600px
+[[file:~/OneDrive/Org/crypto.com/golang/golang/Interfaces/_20211020_120424screenshot.png]]
+
+
+#+attr_org: :width 600px
+[[file:~/OneDrive/Org/crypto.com/golang/golang/Interfaces/_20211020_120621screenshot.png]]
+
+#+attr_org: :width 600px
+[[file:~/OneDrive/Org/crypto.com/golang/golang/Interfaces/_20211020_122545screenshot.png]]
 
 
 * Best pratices
@@ -1794,6 +2015,22 @@ func main() {
 
 #+RESULTS:
 : true, bool
+
+- Best practices for interfaces
+  - Use many, small interfaces
+    + Single methods interfaces are some of the most powerful and flexible (1 or 0 method)
+      - io.Writer, io.Reader, interface{}
+  - Don't export interfaces for types that will be consumed (unlike rust)
+  - Do export interfaces for types that will be used by package
+    + If you poll a value in, go ahead and accept an interface instead of a concrete type
+  - Design functions and methods to receive interfaces whenever possible
+    - Go has implict implemention on interface (unlike java and C#, which are explicitly
+      implemeted) by matching the interface method signature, you can defer the creation of the interfaces until you need them
+      + Design the library that you define the interface you accept (behavior providers), and use can proivide
+        whatever implementations they want
+    - That's not always possible, if you need to access the data fields of the a concrete type,
+      do taking the concrete type. 
+
 
 * References
 - https://www.youtube.com/watch?v=YS4e4q9oBaU
