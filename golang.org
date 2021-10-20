@@ -24,7 +24,7 @@ the notes. Some notes are embedded in the comments.
 sh- https://blog.gopheracademy.com/gophers-slack-community/
 sh- https://play.golang.org/
 sh
-#+begin_src go :export both
+#+begin_src go :exports both
 package main // every go has package
 
 import (
@@ -80,7 +80,7 @@ go standlone itself is go workspace, has src, pkg etc
 #+attr_org: :width 600px
 [[file:golang/Variables/_20211014_221954screenshot.png]]
 
-#+begin_src go :export both
+#+begin_src go :exports both
 package main // every go has package
 
 import (
@@ -97,7 +97,7 @@ func main() {
 : 42
 
 
-#+begin_src go :export both
+#+begin_src go :exports both
 package main // every go has package
 
 import (
@@ -172,7 +172,7 @@ strconv.Itoa(x): convert between number and string
 #+attr_org: :width 600px
 [[file:golang/Primitives/_20211014_224851screenshot.png]]
 
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 
 import (
@@ -260,7 +260,7 @@ rune
 
 #+attr_org: :width 600px
 [[file:golang/Constants/_20211017_202409screenshot.png]]
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 
 import (
@@ -316,7 +316,7 @@ Constant Offset treat in golang:
 #+attr_org: :width 600px
 [[file:golang/Constants/_20211017_223907screenshot.png]]
 
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 import ("fmt")
 const (
@@ -337,7 +337,7 @@ fmt.Println("%v, %v, %v", KB, MB, GB)
 
 Bit shift, bit mask:
 
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 import ("fmt")
 const (
@@ -378,7 +378,7 @@ fmt.Printf("Is Admin? %v\n", isAdmin & roles == isAdmin)
 
 arrays forms the basics of slices
 
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 import ("fmt")
 
@@ -494,7 +494,7 @@ n: [1 2 4 5 5]
 
 ** Maps
 map is hashmap in rust
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 import ("fmt")
 func main() {
@@ -543,7 +543,7 @@ func main() {
 : map[California:39250017 Texas:27862596]
 
 ** Structs
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 import (
 	"fmt" 
@@ -634,7 +634,7 @@ func main() {
 [[file:golang/If_and_Switch_Statements/_20211018_150244screenshot.png]]
 
 ** If Statement
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 import (
 	"fmt"
@@ -686,7 +686,7 @@ func main() {
 : Different
 : Same
 ** Switch
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 import (
 	"fmt"
@@ -711,7 +711,7 @@ func main() {
 #+RESULTS:
 
 tag-less switch, very similar with if
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 import (
 	"fmt"
@@ -738,7 +738,7 @@ func main() {
 
 type switching with interface (a little similar with trait object but can check type directly)
 
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 import ("fmt")
 func main() {
@@ -779,7 +779,7 @@ func main() {
 
 
 ** For loop
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 
 import (
@@ -905,7 +905,7 @@ Use `break label`
 
 * Defer, Panic, and Recover
 ** Defer
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 
 import (
@@ -926,7 +926,7 @@ func main() {
 : middle
 : start
 
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 
 import (
@@ -1250,7 +1250,7 @@ Allow: /imgres
 Sitemap: https://www.google.com/sitemap.xml
 #+end_example
 
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 
 import (
@@ -1271,7 +1271,7 @@ func main() {
 ** Panic
 Panic can not continue. For example, file does not exists. But we can recover from panic. It is
 better to return err.
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 
 import (
@@ -1291,7 +1291,7 @@ func main() {
 
 ** Recover
 
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 
 import (
@@ -1332,7 +1332,7 @@ func panicker() {
 #+attr_org: :width 600px
 [[file:golang/Pointer/_20211019_102326screenshot.png]]
 
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 
 import (
@@ -1355,7 +1355,7 @@ func main() {
 
 Unlike C/C++, Go does not allow pointer arithmetic, use unsafe instead
 
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 
 import (
@@ -1418,7 +1418,7 @@ Keep in mind all the time: slice and map use pointer when assign value
 [[file:golang/Functions/_20211019_114742screenshot.png]]
 
 ** Functions
-#+begin_src go :export both
+#+begin_src go :exports both
 package main // entry point
 
 import (
@@ -1542,7 +1542,7 @@ Hello Go, later
 #+end_example
 
 ** Method
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 
 import (
@@ -1617,7 +1617,7 @@ The main features make go maintable
 #+attr_org: :width 600px
 [[file:golang/Interfaces/_20211019_165612screenshot.png]]
 
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 
 import (
@@ -1657,7 +1657,7 @@ naming convension:
 
 
 Implement interface for int
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 
 import (
@@ -1689,7 +1689,7 @@ func (ic *IntCounter) Increment() int {
 
 Embed interfaces into another interface
 
-#+begin_src go :export both
+#+begin_src go :exports both
 package main
 
 import (
@@ -1778,7 +1778,7 @@ func NewBufferedWriterCloser() *BufferedWriterCloser {
 - Pascal or camelCase
 
 
-#+begin_src go :export both
+#+begin_src go :exports both
 package main // every go has package
 
 import (
