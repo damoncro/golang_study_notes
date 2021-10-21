@@ -2160,6 +2160,215 @@ func main() {
 #+attr_org: :width 600px
 [[file:golang/Goroutines/_20211020_161125screenshot.png]]
 
+* Channels
+** Agenda
+
+#+attr_org: :width 600px
+[[file:~/OneDrive/Org/crypto.com/golang/golang/Channels/_20211020_161908screenshot.png]]
+
+#+begin_src go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+var wg = sync.WaitGroup{}
+
+func main() {
+	ch := make(chan int) // channel holds int
+	wg.Add(2) // 2 gorountines
+	// receiver
+	go func() {
+		i := <- ch
+		fmt.Println(i)
+		wg.Done()
+	}()
+	
+	// sender
+	go func() {
+		i := 42
+		ch <- i // pass i (copy) to channel
+		i = 27 // it is ok
+		wg.Done()
+	}()
+	wg.Wait()
+	
+}
+
+#+end_src
+
+#+RESULTS:
+: 42
+
+Specify the channel direction
+#+begin_src go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+var wg = sync.WaitGroup{}
+
+func main() {
+	ch := make(chan int)
+	for j := 0; j < 5; j++ {
+		wg.Add(2)
+		go func(ch <-chan int) { // receive data only channel
+			i := <-ch
+			fmt.Println(i)
+			wg.Done()
+		}(ch)
+
+		go func(ch chan<- int) { // send data only channel
+			ch <- 42 // actually block here
+			wg.Done()
+		}(ch)
+	}
+	
+	wg.Wait()
+	
+}
+
+#+end_src
+
+#+RESULTS:
+: 42
+: 42
+: 42
+: 42
+: 42
+
+- Multiple senders, only one receiver, deadlock can be fixed by specify buffer size in make
+- Buffer goroutine is useful if the sender or receiver needs a little more time to process, and would not block the other side because of the delay.
+#+begin_src go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+var wg = sync.WaitGroup{}
+
+func main() {
+	ch := make(chan int, 50) // increase the buffer
+	wg.Add(2)
+	go func(ch <-chan int) { // receive data only channel
+		// get two times from channel
+		// i := <-ch
+		// fmt.Println(i)
+		// i = <-ch
+		// fmt.Println(i)
+		
+		// for range the channel is more clever
+		// but to avoid the deadlock, need to exit the for 
+		// for range a channel will be dead loop
+		// for i := range ch {
+		// 	fmt.Println(i)
+		// }
+
+		// check with comma ok syntax, in this case we do not need for range 
+		for {
+			if i, ok := <-ch; ok { // check the channel open or not
+				fmt.Println(i)
+			} else {
+				break
+			}
+		}
+		wg.Done()
+	}(ch)
+
+	go func(ch chan<- int) { // send data only channel
+		ch <- 42 // actually block here
+		ch <- 27
+		// critical to quit the channel, to avoid the for loop in recviver dead lock
+		// Be careful: make sure you no longer pass to data to channel after close the channel
+		close(ch)
+		wg.Done()
+    }(ch)
+	
+	wg.Wait()
+}
+
+#+end_src
+
+#+RESULTS:
+: 42
+: 27
+
+
+#+begin_src go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+const (
+	logInfo = "INFO"
+	logWarning = "WARNING"
+	logError = "ERROR"
+) // remmeber use () rather than {}
+
+type logEntry struct {
+	time time.Time
+	severity string
+	message string
+}
+
+var logCh = make(chan logEntry, 50)
+var doneCh = make(chan struct{}) // single only channel, no memmory allocation
+
+func main() {
+	go logger()
+	// method 1: you can close the channel gracefully with defer when only one channel
+	// defer func() {
+	// 	close(logCh)
+	// }()
+	logCh <- logEntry{time.Now(), logInfo, "App is starting"}
+
+	logCh <- logEntry{time.Now(), logInfo, "App is shutting down"}
+	time.Sleep(100 * time.Millisecond)
+	
+	// method 2: pass to channel when I want it to shutdown, if have doneCh defined
+	doneCh <- struct{}{} // strcut{} is type signature, {} means no field
+}
+
+func logger() {
+	// method 1: only logCh channel
+	// for entry := range logCh {
+// 	fmt.Printf("%v - [%v]%v\n", entry.time.Format("2006-01-02T15:04:05"), entry.severity, entry.message)
+	// }
+	
+	// method 2: two channels: logCh and doneCh
+	for {
+		select {
+			case entry := <- logCh:
+			fmt.Printf("%v - [%v]%v\n", entry.time.Format("2006-01-02T15:04:05"), entry.severity, entry.message)
+			case <- doneCh:
+				break
+			// if one of above two channel's data is ready, it will run above statemetns
+			// if not, runs the default
+			// without the default, will block forever, until message comes in
+			// with the default, will not block
+			// default:
+		}
+	}
+}
+
+#+end_src
+
+#+RESULTS:
+: 2021-10-20T19:01:46 - [INFO]App is starting
+: 2021-10-20T19:01:46 - [INFO]App is shutting down
+
+** Summary
+
 
 * Best pratices
 - length -> life, but keep as short as possible
