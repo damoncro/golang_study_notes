@@ -2224,7 +2224,7 @@ func main() {
 ** Agenda
 
 #+attr_org: :width 600px
-[[file:~/OneDrive/Org/crypto.com/golang/golang/Channels/_20211020_161908screenshot.png]]
+[[file:golang/Channels/_20211020_161908screenshot.png]]
 
 #+begin_src go
 package main
