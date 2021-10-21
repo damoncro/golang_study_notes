@@ -2401,7 +2401,7 @@ func main() {
 
 func logger() {
 	// method 1: only logCh channel
-	// for entry := range logCh {
+	// for entry := range logCh { // notice that it is the value itself rather than index
 // 	fmt.Printf("%v - [%v]%v\n", entry.time.Format("2006-01-02T15:04:05"), entry.severity, entry.message)
 	// }
 	
@@ -2428,6 +2428,21 @@ func logger() {
 : 2021-10-20T19:01:46 - [INFO]App is shutting down
 
 ** Summary
+
+#+attr_org: :width 600px
+[[file:golang/Channels/_20211021_110007screenshot.png]]
+
+#+attr_org: :width 600px
+[[file:golang/Channels/_20211021_110104screenshot.png]]
+
+#+attr_org: :width 600px
+[[file:golang/Channels/_20211021_110227screenshot.png]]
+
+#+attr_org: :width 600px
+[[file:golang/Channels/_20211021_110409screenshot.png]]
+
+#+attr_org: :width 600px
+[[file:golang/Channels/_20211021_110528screenshot.png]]
 
 
 * Best pratices
