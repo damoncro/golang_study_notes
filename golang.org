@@ -61,6 +61,7 @@ the notes. Some notes are embedded in the comments.
   - [[#agenda-9][Agenda]]
   - [[#summary-12][Summary]]
 - [[#best-pratices][Best pratices]]
+- [[#how-to-write-go-code][How to Write Go Code]]
 - [[#references][References]]
 
 * Introduction
@@ -103,7 +104,6 @@ func main() {
 "": quotation mark
 
 * Setting Up a Development Environment
-
 
 #+begin_src sh
 export GOROOT=/usr/local/go # where go is installed
@@ -2501,6 +2501,18 @@ func main() {
     - Avoids subtle memory leaks
   + Chck for race conditions at compile time
     - =go run -race src/main.go=
+* How to Write Go Code
+https://go.dev/doc/code
+
+A very simple echo program:
+#+begin_src sh
+mkdir echo
+go mod init echo
+cat go.mod
+vi server.go
+go mod tidy
+go build
+#+end_src
 
 * References
 - https://www.youtube.com/watch?v=YS4e4q9oBaU
