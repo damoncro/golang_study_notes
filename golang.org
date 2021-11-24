@@ -2507,11 +2507,11 @@ https://go.dev/doc/code
 A very simple echo program:
 #+begin_src sh
 mkdir echo
-go mod init echo
+go mod init src/echo-server
 cat go.mod
-vi server.go
+vi src/server.go
 go mod tidy
-go build
+go build src/server.go
 #+end_src
 
 * References
