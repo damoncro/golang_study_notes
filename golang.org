@@ -132,6 +132,17 @@ go install ${paht of the pkg name}
 
 #+end_src
 
+#+begin_src sh
+go get -u github.com/x-motemen/gore/cmd/gore
+go get -u github.com/stamblerre/gocode
+go get -u golang.org/x/tools/cmd/godoc
+go get -u golang.org/x/tools/cmd/goimports
+go get -u golang.org/x/tools/cmd/gorename
+go get -u golang.org/x/tools/cmd/guru
+go get -u github.com/cweill/gotests/...
+go get -u github.com/fatih/gomodifytags
+
+#+end_src
 go standlone itself is go workspace, has src, pkg etc
 
 
